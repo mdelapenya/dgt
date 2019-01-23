@@ -116,7 +116,7 @@ func processPlate(plate string) {
 	// Make request
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal("Error while reading remote service")
+		log.Printf("%s: Error while reading remote service", plate)
 	}
 	defer resp.Body.Close()
 
