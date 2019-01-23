@@ -48,7 +48,7 @@ var scrapCmd = &cobra.Command{
 	},
 }
 
-func createGrouping(plate string, html string) {
+func createGrouping(plate string, html string) string {
 	var sticker string
 
 	if strings.Contains(html, notFound) {
@@ -75,7 +75,7 @@ func createGrouping(plate string, html string) {
 		sticker = html
 	}
 
-	fmt.Printf("Plate %s is %s.\n", plate, sticker)
+	return sticker
 }
 
 func formatNumber(n int) string {
@@ -94,7 +94,7 @@ func formatNumber(n int) string {
 	return fmt.Sprintf("%d", n)
 }
 
-func processPlate(plate string) {
+func processPlate(plate string) string {
 	url := fmt.Sprintf("http://www.dgt.es/es/seguridad-vial/distintivo-ambiental/index.shtml?accion=1&matriculahd=&matricula=%s&submit=Comprobar", plate)
 
 	// Create and modify HTTP request before sending
@@ -117,8 +117,10 @@ func processPlate(plate string) {
 		htmlResult := string(bodyBytes)
 		parsedHTML := parser.Parse(htmlResult)
 
-		createGrouping(plate, parsedHTML)
+		return createGrouping(plate, parsedHTML)
 	}
+
+	return "Not found"
 }
 
 func scrapPlates() {
@@ -142,6 +144,7 @@ func scrapPlates() {
 
 	// Open all urls concurrently using the 'go' keyword:
 	for _, plate := range plates {
-		processPlate(plate)
+		sticker := processPlate(plate)
+		fmt.Printf("Plate %s is %s.\n", plate, sticker)
 	}
 }
