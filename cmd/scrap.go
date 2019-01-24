@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	mysql "github.com/mdelapenya/dgt/db"
 	"github.com/mdelapenya/dgt/parser"
 	"github.com/spf13/cobra"
 )
@@ -75,6 +76,8 @@ func createGrouping(plate string, html string) string {
 		sticker = html
 	}
 
+	saveRequest(plate, sticker)
+
 	return sticker
 }
 
@@ -92,6 +95,10 @@ func formatNumber(n int) string {
 	}
 
 	return fmt.Sprintf("%d", n)
+}
+
+func saveRequest(plate string, sticker string) {
+	mysql.InsertPlate(plate, sticker)
 }
 
 func processPlate(plate string) string {
