@@ -1,0 +1,15 @@
+{
+    "id": "db",
+    "memory": 1024,
+    "env": {
+      "MYSQL_DATABASE": "dgt",
+      "MYSQL_ROOT_PASSWORD": "passw0rd",
+      "character-set-server": "utf8mb4",
+      "collation-server": "utf8mb4_unicode_ci"
+    },
+    "volumes": {
+      "db": "/var/lib/mysql"
+    },
+    "port": 0,
+    "zeroDowntime": false
+  }
