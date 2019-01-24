@@ -3,11 +3,14 @@ package db
 import (
 	"database/sql"
 	"log"
+	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const dsn = "root:passw0rd@tcp(db:3306)/dgt"
+var pwd = os.Getenv("MYSQL_ROOT_PASSWORD")
+var dsn = "root:" + pwd + "@tcp(db:3306)/dgt"
+
 const insertSQL = "INSERT INTO plates(plate, sticker, counts) VALUES(?,?,1)"
 const selectSQL = "SELECT COUNT(1) as count FROM plates WHERE plate=?"
 const updateSQL = "UPDATE plates SET counts=counts+1, sticker=? WHERE plate=?"
