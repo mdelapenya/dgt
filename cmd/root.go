@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 )
@@ -44,6 +45,9 @@ func runServer() {
 	router := gin.Default()
 
 	router.GET("/plates/:plate", fetchPlate)
+
+	// Serve frontend static files
+	router.Use(static.Serve("/", static.LocalFile("./views", true)))
 
 	router.Run()
 }

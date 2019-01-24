@@ -26,6 +26,14 @@
   revision = "22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae"
 
 [[projects]]
+  branch = "master"
+  digest = "1:555fef7420c108d88754e41e02299fd10f67dc6602d643944611a4100132d3cf"
+  name = "github.com/gin-gonic/contrib"
+  packages = ["static"]
+  pruneopts = "UT"
+  revision = "54170a7b0b4b2f9219c79599b1b03830a5a7d68d"
+
+[[projects]]
   digest = "1:d5083934eb25e45d17f72ffa86cae3814f4a9d6c073c4f16b64147169b245606"
   name = "github.com/gin-gonic/gin"
   packages = [
@@ -177,6 +185,7 @@
   analyzer-version = 1
   input-imports = [
     "github.com/antchfx/htmlquery",
+    "github.com/gin-gonic/contrib/static",
     "github.com/gin-gonic/gin",
     "github.com/spf13/cobra",
   ]
