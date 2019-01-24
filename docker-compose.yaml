@@ -1,0 +1,15 @@
+version: '3'
+services:
+  go:
+    build: .
+    ports:
+        - 8080:8080
+  db:
+    build: ./database
+    environment:
+      - MYSQL_DATABASE=dgt
+      - MYSQL_ROOT_PASSWORD=passw0rd
+      - character-set-server="utf8mb4"
+      - collation-server="utf8mb4_unicode_ci"
+    ports:
+        - 3306:3306
