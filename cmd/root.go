@@ -28,7 +28,7 @@ func Execute() {
 func fetchPlate(c *gin.Context) {
 	plate := c.Param("plate")
 
-	sticker := processPlate(plate)
+	sticker := ProcessPlate(plate)
 
 	status := http.StatusOK
 

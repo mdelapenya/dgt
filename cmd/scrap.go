@@ -101,7 +101,8 @@ func saveRequest(plate string, sticker string) {
 	mysql.InsertPlate(plate, sticker)
 }
 
-func processPlate(plate string) string {
+// ProcessPlate fetches plate information from DGT web site, using scrapping techniques
+func ProcessPlate(plate string) string {
 	url := fmt.Sprintf("http://www.dgt.es/es/seguridad-vial/distintivo-ambiental/index.shtml?accion=1&matriculahd=&matricula=%s&submit=Comprobar", plate)
 
 	// Create and modify HTTP request before sending
