@@ -152,7 +152,7 @@ func scrapPlates() {
 
 	// Open all urls concurrently using the 'go' keyword:
 	for _, plate := range plates {
-		sticker := processPlate(plate)
+		sticker := ProcessPlate(plate)
 		fmt.Printf("Plate %s is %s.\n", plate, sticker)
 	}
 }
