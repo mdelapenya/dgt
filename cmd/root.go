@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
+	"github.com/mdelapenya/dgt/scrap"
 	"github.com/spf13/cobra"
 )
 
@@ -28,11 +29,11 @@ func Execute() {
 func fetchPlate(c *gin.Context) {
 	plate := c.Param("plate")
 
-	sticker := ProcessPlate(plate)
+	sticker := scrap.ProcessPlate(plate)
 
 	status := http.StatusOK
 
-	if sticker == "Not found" || sticker == notFound {
+	if sticker == "Not found" || sticker == scrap.NotFound {
 		status = http.StatusNotFound
 	}
 
