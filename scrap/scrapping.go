@@ -32,7 +32,7 @@ var groupC = []string{}
 var groupB = []string{}
 
 // ProcessPlate fetches plate information from DGT web site, using scrapping techniques
-func ProcessPlate(plate string) string {
+func ProcessPlate(plate string, persist bool) string {
 	url := fmt.Sprintf("http://www.dgt.es/es/seguridad-vial/distintivo-ambiental/index.shtml?accion=1&matriculahd=&matricula=%s&submit=Comprobar", plate)
 
 	// Create and modify HTTP request before sending
@@ -55,7 +55,7 @@ func ProcessPlate(plate string) string {
 		htmlResult := string(bodyBytes)
 		parsedHTML := parser.Parse(htmlResult)
 
-		return createGrouping(plate, parsedHTML)
+		return createGrouping(plate, parsedHTML, persist)
 	}
 
 	return "Not found"
@@ -67,7 +67,7 @@ func init() {
 	}
 }
 
-func createGrouping(plate string, html string) string {
+func createGrouping(plate string, html string, persist bool) string {
 	var sticker string
 
 	if strings.Contains(html, notFound) {
@@ -94,7 +94,9 @@ func createGrouping(plate string, html string) string {
 		sticker = html
 	}
 
-	saveRequest(plate, sticker)
+	if persist {
+		saveRequest(plate, sticker)
+	}
 
 	return sticker
 }

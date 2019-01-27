@@ -61,7 +61,7 @@ func scrapPlates() {
 	}
 
 	for _, plate := range plates {
-		sticker := scrap.ProcessPlate(plate)
+		sticker := scrap.ProcessPlate(plate, false)
 		fmt.Printf("Plate %s is %s.\n", plate, sticker)
 	}
 }
