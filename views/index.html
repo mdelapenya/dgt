@@ -2,31 +2,40 @@
 <html>
 <head>
   <title>DGT App</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 </head>
 
 <body>
-  <h1>Welcome to the DGT App</h1>
-  <div>
-      <h3>Endpoints</h3>
-      <p>Please invoke this REST API using following endpoints:</p>
-      <table>
-          <thead>
-              <th>METHOD</th>
-              <th>Example</th>
-          </thead>
-          <tbody>
-              <tr>
-                  <td>GET</td>
-                  <td>/plates/:plate</td>
-              </tr>
-          </tbody>
-      </table>
-      <h3>Output</h3>
-      <p>
-          <pre>
-            {"result":"Etiqueta Ambiental C"}
-          </pre>
-      </p>
-  </div>
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4">Welcome to the DGT App</h1>
+            <p class="lead">Check the enviromental sticker for your car.</p>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <h1>Welcome to the DGT App</h1>
+        <h3>Endpoints</h3>
+        <p>Please invoke this REST API using following endpoints:</p>
+        <table class="table table-bordered">
+            <caption>List of available endpoints</caption>
+            <thead class="thead-light ">
+                <th scope="col">#</th>
+                <th scope="col">METHOD</th>
+                <th scope="col">Example</th>
+            </thead>
+            <tbody class="table-striped">
+                <tr>
+                    <th scope="row">1</th>
+                    <td>GET</td>
+                    <td>/plates/:plate</td>
+                </tr>
+            </tbody>
+        </table>
+        <h3>Output</h3>
+        <p>
+            <pre><code>{"result":"Etiqueta Ambiental C"}</code></pre>
+        </p>
+    </div>
 </body>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
 </html>
