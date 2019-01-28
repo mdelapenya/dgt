@@ -70,9 +70,9 @@ func init() {
 func createGrouping(plate string, html string, persist bool) string {
 	var sticker string
 
-	if strings.Contains(html, notFound) {
+	if strings.Contains(html, NotFound) {
 		groupNotFound = append(groupNotFound, plate)
-		sticker = notFound
+		sticker = NotFound
 	} else if strings.Contains(html, stickerB) {
 		groupB = append(groupB, plate)
 		sticker = stickerB
