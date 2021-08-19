@@ -33,7 +33,7 @@ var groupB = []string{}
 
 // ProcessPlate fetches plate information from DGT web site, using scrapping techniques
 func ProcessPlate(plate string, persist bool) string {
-	url := fmt.Sprintf("http://www.dgt.es/es/seguridad-vial/distintivo-ambiental/index.shtml?accion=1&matriculahd=&matricula=%s&submit=Comprobar", plate)
+	url := fmt.Sprintf("https://sede.dgt.gob.es/es/vehiculos/distintivo-ambiental/?accion=1&matriculahd=&matricula=%s&submit=Consultar", plate)
 
 	// Create and modify HTTP request before sending
 	req, err := http.NewRequest("GET", url, nil)
