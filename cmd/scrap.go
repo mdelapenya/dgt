@@ -26,7 +26,7 @@ var scrapCmd = &cobra.Command{
 	Long:  `Scraps all car plates retrieving their ECO sticker, starting in 0000BBB`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if plate != "" {
-			scrapPlate(plate)
+			scrapPlate(plate, false)
 			return
 		}
 
@@ -50,8 +50,8 @@ func formatNumber(n int) string {
 	return fmt.Sprintf("%d", n)
 }
 
-func scrapPlate(plate string) {
-	sticker := scrap.ProcessPlate(plate, false)
+func scrapPlate(plate string, persist bool) {
+	sticker := scrap.ProcessPlate(plate, persist)
 	fmt.Printf("Plate %s is %s.\n", plate, sticker)
 }
 
@@ -75,6 +75,6 @@ func scrapPlates() {
 	}
 
 	for _, plate := range plates {
-		scrapPlate(plate)
+		scrapPlate(plate, true)
 	}
 }
