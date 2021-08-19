@@ -12,7 +12,11 @@ const alphabet = "BCDFGHJKLMNPQRSTVWXYZ"
 
 var chars = []rune(alphabet)
 
+var plate string
+
 func init() {
+	scrapCmd.Flags().StringVarP(&plate, "plate", "P", "", "Plate to scrap")
+
 	rootCmd.AddCommand(scrapCmd)
 }
 
@@ -21,6 +25,11 @@ var scrapCmd = &cobra.Command{
 	Short: "Scraps all car plates retrieving their ECO sticker",
 	Long:  `Scraps all car plates retrieving their ECO sticker, starting in 0000BBB`,
 	Run: func(cmd *cobra.Command, args []string) {
+		if plate != "" {
+			scrapPlate(plate)
+			return
+		}
+
 		scrapPlates()
 	},
 }
@@ -39,6 +48,11 @@ func formatNumber(n int) string {
 	}
 
 	return fmt.Sprintf("%d", n)
+}
+
+func scrapPlate(plate string) {
+	sticker := scrap.ProcessPlate(plate, false)
+	fmt.Printf("Plate %s is %s.\n", plate, sticker)
 }
 
 func scrapPlates() {
@@ -61,7 +75,6 @@ func scrapPlates() {
 	}
 
 	for _, plate := range plates {
-		sticker := scrap.ProcessPlate(plate, false)
-		fmt.Printf("Plate %s is %s.\n", plate, sticker)
+		scrapPlate(plate)
 	}
 }
