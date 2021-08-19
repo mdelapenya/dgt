@@ -12,9 +12,11 @@ const alphabet = "BCDFGHJKLMNPQRSTVWXYZ"
 
 var chars = []rune(alphabet)
 
+var persist bool
 var plate string
 
 func init() {
+	scrapCmd.Flags().BoolVarP(&persist, "persist", "p", false, "If the result will be persisted in a data store")
 	scrapCmd.Flags().StringVarP(&plate, "plate", "P", "", "Plate to scrap")
 
 	rootCmd.AddCommand(scrapCmd)
@@ -52,12 +54,10 @@ func formatNumber(n int) string {
 
 func scrapPlate(plate string, persist bool) {
 	sticker := scrap.ProcessPlate(plate, persist)
-	fmt.Printf("Plate %s is %s.\n", plate, sticker)
+	fmt.Printf("%s: %s\n", plate, sticker)
 }
 
 func scrapPlates() {
-	plates := []string{}
-
 	for _, c1 := range chars {
 		for _, c2 := range chars {
 			for _, c3 := range chars {
@@ -68,13 +68,9 @@ func scrapPlates() {
 					sb.WriteRune(c2)
 					sb.WriteRune(c3)
 
-					plates = append(plates, sb.String())
+					scrapPlate(sb.String(), persist)
 				}
 			}
 		}
-	}
-
-	for _, plate := range plates {
-		scrapPlate(plate, true)
 	}
 }
