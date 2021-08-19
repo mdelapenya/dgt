@@ -13,13 +13,13 @@ import (
 )
 
 // NotFound string representing a not found plate
-const NotFound = "No se ha encontrado ningun resultado para la matrícula introducida"
+const NotFound = "No se ha encontrado ningún resultado para la matrícula introducida"
 
 const noSticker = "Sin distintivo"
-const stickerB = "Etiqueta Ambiental B"
-const stickerC = "Etiqueta Ambiental C"
+const stickerB = "Etiqueta Ambiental B Amarilla"
+const stickerC = "Etiqueta Ambiental C Verde"
 const stickerEco = "Etiqueta Ambiental Eco"
-const stickerZero = "Etiqueta Ambiental Cero"
+const stickerZero = "Etiqueta Ambiental 0"
 const userAgent = "DGT Plates Bot https://github.com/mdelapenya/dgt - " +
 	"This bot just gathers info about plates, grouping them by sticker type"
 
@@ -72,22 +72,22 @@ func createGrouping(plate string, html string, persist bool) string {
 
 	if strings.Contains(html, NotFound) {
 		groupNotFound = append(groupNotFound, plate)
-		sticker = NotFound
+		sticker = "❌ " + NotFound
 	} else if strings.Contains(html, stickerB) {
 		groupB = append(groupB, plate)
-		sticker = stickerB
+		sticker = "🟡 " + stickerB
 	} else if strings.Contains(html, stickerC) {
 		groupC = append(groupC, plate)
-		sticker = stickerC
+		sticker = "🟢 " + stickerC
 	} else if strings.Contains(html, stickerEco) {
 		groupEco = append(groupEco, plate)
-		sticker = stickerEco
+		sticker = "🟣 " + stickerEco
 	} else if strings.Contains(html, stickerZero) {
 		groupZero = append(groupZero, plate)
-		sticker = stickerZero
+		sticker = "🔵 " + stickerZero
 	} else if strings.Contains(html, noSticker) {
 		groupNoSticker = append(groupNoSticker, plate)
-		sticker = noSticker
+		sticker = "⚪️ " + noSticker
 	}
 
 	if sticker == "" {

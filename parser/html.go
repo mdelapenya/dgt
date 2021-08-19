@@ -15,6 +15,11 @@ func Parse(HTML string) string {
 	}
 
 	result := htmlquery.FindOne(doc, `//div[@id="resultadoBusqueda"]/div/div/p/strong/text()`)
+	if result == nil {
+		// the plate does not exist
+		//*[@id="resultadoBusqueda"]/div/div/p/text()
+		result = htmlquery.FindOne(doc, `//div[@id="resultadoBusqueda"]/div/div/p/text()`)
+	}
 
 	return result.Data
 }
