@@ -61,6 +61,8 @@ func scrapPlate(plate string, persist bool) {
 }
 
 func scrapPlates(fromPlate string) {
+	fromPlate = strings.ToLower(fromPlate)
+
 	initialIndex := 0
 	firstChar := 0
 	secondChar := 0
