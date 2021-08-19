@@ -2,6 +2,35 @@
 
 Esta pequeña aplicación de ejemplo consulta el servicio web, ejem, de la DGT que permite obtener el tipo de distintivo ambiental asociado a una matrícula.
 
+Es posible ejecutarlo en local en dos modos:
+1. Como línea de comandos.
+2. Levantando un servidor web, exponiendo ciertos API endpoints.
+
+## Plates CLI
+
+La CLI ofrece el comando `scrap`, incluyendo la posibilidad de personalizar la respuesta con algunos flags:
+
+```shell
+Scraps all car plates retrieving their ECO sticker, starting in 0000BBB
+
+Usage:
+  dgt scrap [flags]
+
+Flags:
+  -F, --from string    Plate where to scrap from
+  -h, --help           help for scrap
+  -p, --persist        If the result will be persisted in a data store
+  -P, --plate string   Plate to scrap
+```
+
+### Flags
+
+| Flag      | Short version | Type    | Default | Requerido | Descripción                                                 |
+| --------- | --------------| ------- | --------| --------- | ----------------------------------------------------------- |
+| --from    | -F            | string  |         | no        | Una matrícula válida desde la que empezar el procesado      |
+| --persist | -p            | boolean | no      | no        | Si es necesario persistir el resultado en un almacenamiento |
+| --plate   | -P            | string  |         | no        | Si tiene valor, únicamente se procesará esa matrícula       |
+
 ## Plates API
 
 ### Get sticker for a plate
