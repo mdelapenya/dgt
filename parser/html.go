@@ -14,7 +14,7 @@ func Parse(HTML string) string {
 		log.Fatalln("The HTML is not parseable")
 	}
 
-	result := htmlquery.FindOne(doc, `//div[@id="resultadoBusqueda"]/div/p/text()`)
+	result := htmlquery.FindOne(doc, `//div[@id="resultadoBusqueda"]/div/div/p/strong/text()`)
 
 	return result.Data
 }
