@@ -19,6 +19,9 @@ func Parse(HTML string) string {
 		// the plate does not exist
 		//*[@id="resultadoBusqueda"]/div/div/p/text()
 		result = htmlquery.FindOne(doc, `//div[@id="resultadoBusqueda"]/div/div/p/text()`)
+		if result == nil {
+			return "No encontrado"
+		}
 	}
 
 	return result.Data
