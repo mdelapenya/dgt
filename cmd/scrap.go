@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/mdelapenya/dgt/scrap"
@@ -14,8 +15,10 @@ var chars = []rune(alphabet)
 
 var persist bool
 var plate string
+var from string
 
 func init() {
+	scrapCmd.Flags().StringVarP(&from, "from", "F", "", "Plate where to scrap from")
 	scrapCmd.Flags().BoolVarP(&persist, "persist", "p", false, "If the result will be persisted in a data store")
 	scrapCmd.Flags().StringVarP(&plate, "plate", "P", "", "Plate to scrap")
 
@@ -32,7 +35,7 @@ var scrapCmd = &cobra.Command{
 			return
 		}
 
-		scrapPlates()
+		scrapPlates(from)
 	},
 }
 
@@ -57,11 +60,32 @@ func scrapPlate(plate string, persist bool) {
 	fmt.Printf("%s: %s\n", plate, sticker)
 }
 
-func scrapPlates() {
-	for _, c1 := range chars {
-		for _, c2 := range chars {
-			for _, c3 := range chars {
-				for i := 0; i < 10000; i++ {
+func scrapPlates(fromPlate string) {
+	initialIndex := 0
+	firstChar := 0
+	secondChar := 0
+	thirdChar := 0
+
+	if fromPlate != "" {
+		plateNumber, err := strconv.Atoi(string(fromPlate[0:4]))
+		if err == nil {
+			initialIndex = plateNumber
+		}
+
+		lowerCaseAlphabet := strings.ToLower(alphabet)
+
+		firstChar = strings.IndexRune(lowerCaseAlphabet, rune(fromPlate[4]))
+		secondChar = strings.IndexRune(lowerCaseAlphabet, rune(fromPlate[5]))
+		thirdChar = strings.IndexRune(lowerCaseAlphabet, rune(fromPlate[6]))
+	}
+
+	for a := firstChar; a < len(chars); a++ {
+		c1 := chars[a]
+		for b := secondChar; b < len(chars); b++ {
+			c2 := chars[b]
+			for c := thirdChar; c < len(chars); c++ {
+				c3 := chars[c]
+				for i := initialIndex; i < 10000; i++ {
 					var sb strings.Builder
 					sb.WriteString(formatNumber(i))
 					sb.WriteRune(c1)
@@ -70,7 +94,11 @@ func scrapPlates() {
 
 					scrapPlate(sb.String(), persist)
 				}
+				initialIndex = 0
+				thirdChar = 0
 			}
+			secondChar = 0
 		}
+		firstChar = 0
 	}
 }
