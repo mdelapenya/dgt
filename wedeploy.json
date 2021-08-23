@@ -1,7 +1,0 @@
-{
-    "id": "web",
-    "cpu": 0.5,
-    "memory": 512,
-    "port": 8080,
-    "customDomains": ["dgt.wedeploy.io"]
-}
