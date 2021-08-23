@@ -62,7 +62,6 @@ GET /plates/:plate
 
 ```bash
 curl "http://localhost:8080/plates/0000bbb"
-curl "https://dgt.wedeploy.io/plates/0000bbb"
 ```
 
 ##### Response `200 OK`
@@ -71,4 +70,4 @@ curl "https://dgt.wedeploy.io/plates/0000bbb"
 {"result":"Etiqueta Ambiental C"}
 ```
 
-> Escribe la matrícula sin guiones ni espacios (0000XXX / XX0000XX / C0000XXX)
+> Escribe la matrícula sin guiones ni espacios (0000XXX)
