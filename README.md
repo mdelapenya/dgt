@@ -31,6 +31,25 @@ Flags:
 | --persist | -p            | boolean | no      | no        | Si es necesario persistir el resultado en un almacenamiento |
 | --plate   | -P            | string  |         | no        | Si tiene valor, únicamente se procesará esa matrícula       |
 
+## Docker
+Es posible ejecutar la herramienta como una imagen Docker:
+
+#### Comprobar una matrícula
+```shell
+$ docker run --rm  mdelapenya/dgt:latest scrap --plate 9334LSL
+```
+
+#### Escanear todas las mátriculas
+```shell
+$ docker run --rm  mdelapenya/dgt:latest scrap
+```
+
+#### Escanear todas las mátriculas desde una dada
+Ésto es útil para saber por qué matrícula vamos:
+```shell
+$ docker run --rm  mdelapenya/dgt:latest scrap --from 9334LSL
+```
+
 ## Plates API
 
 ### Get sticker for a plate
