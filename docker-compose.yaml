@@ -2,6 +2,7 @@ version: '3'
 services:
   go:
     build: .
+    command: "${DGT_CMD:-}"
     ports:
         - 8080:8080
     environment:
