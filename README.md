@@ -57,8 +57,6 @@ $ docker run --rm  mdelapenya/dgt:latest scrap --from 9334LSL
 ## Docker Compose
 Es posible ejecutar la herramienta como un stack de Docker Compose, incluyendo el servidor web con el API de matrículas así como una base de datos MySQL para la persistencia de los datos.
 
-```shell:
-
 ```shell
 $ docker compose up --build
 ```
