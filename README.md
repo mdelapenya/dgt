@@ -32,7 +32,11 @@ Flags:
 | --plate   | -P            | string  |         | no        | Si tiene valor, únicamente se procesará esa matrícula       |
 
 ## Docker
-Es posible ejecutar la herramienta como una imagen Docker:
+Es posible ejecutar la herramienta como una imagen Docker, previa construcción de la misma:
+
+```shell
+$ docker build -t mdelapenya/dgt:latest .
+```
 
 #### Comprobar una matrícula
 ```shell
@@ -48,6 +52,21 @@ $ docker run --rm  mdelapenya/dgt:latest scrap
 Ésto es útil para saber por qué matrícula vamos:
 ```shell
 $ docker run --rm  mdelapenya/dgt:latest scrap --from 9334LSL
+```
+
+## Docker Compose
+Es posible ejecutar la herramienta como un stack de Docker Compose, incluyendo el servidor web con el API de matrículas así como una base de datos MySQL para la persistencia de los datos.
+
+```shell:
+
+```shell
+$ docker compose up --build
+```
+
+De esta manera es posible levantar el stack, y utilizar además la CLI para consultar las matrículas, aunque para ello es necesario indicar la contraseña y la ubicación de la base de datos:
+
+```shell
+MYSQL_ROOT_PASSWORD=passw0rd MYSQL_SERVER=localhost go run main.go scrap -p
 ```
 
 ## Plates API
