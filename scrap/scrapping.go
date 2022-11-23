@@ -55,7 +55,13 @@ func ProcessPlate(plate string, persist bool) string {
 		htmlResult := string(bodyBytes)
 		parsedHTML := parser.Parse(htmlResult)
 
-		return createGrouping(plate, parsedHTML, persist)
+		sticker := createGrouping(plate, parsedHTML)
+
+		if persist {
+			saveRequest(plate, sticker)
+		}
+
+		return sticker
 	}
 
 	return "Not found"
@@ -67,7 +73,7 @@ func init() {
 	}
 }
 
-func createGrouping(plate string, html string, persist bool) string {
+func createGrouping(plate string, html string) string {
 	var sticker string
 
 	if strings.Contains(html, NotFound) {
@@ -92,10 +98,6 @@ func createGrouping(plate string, html string, persist bool) string {
 
 	if sticker == "" {
 		sticker = html
-	}
-
-	if persist {
-		saveRequest(plate, sticker)
 	}
 
 	return sticker
