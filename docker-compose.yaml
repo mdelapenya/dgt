@@ -9,6 +9,7 @@ services:
     ports:
         - 8080:8080
     environment:
+      - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
   db:
     build: ./database

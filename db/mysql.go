@@ -9,7 +9,8 @@ import (
 )
 
 var pwd = os.Getenv("MYSQL_ROOT_PASSWORD")
-var dsn = "root:" + pwd + "@tcp(db:3306)/dgt"
+var dbServer = os.Getenv("MYSQL_SERVER")
+var dsn = "root:" + pwd + "@tcp(" + dbServer + ":3306)/dgt"
 
 const insertSQL = "INSERT INTO plates(plate, sticker, counts) VALUES(?,?,1)"
 const selectSQL = "SELECT COUNT(1) as count FROM plates WHERE plate=?"
