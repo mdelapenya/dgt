@@ -12,6 +12,16 @@ import (
 	"github.com/mdelapenya/dgt/parser"
 )
 
+const (
+	invalidID = iota
+	noStickerID
+	stickerBID
+	stickerCID
+	stickerEcoID
+	stickerZeroID
+	notFound
+)
+
 // NotFound string representing a not found plate
 const NotFound = "No se ha encontrado ningún resultado para la matrícula introducida"
 
@@ -55,10 +65,10 @@ func ProcessPlate(plate string, persist bool) string {
 		htmlResult := string(bodyBytes)
 		parsedHTML := parser.Parse(htmlResult)
 
-		sticker := createGrouping(plate, parsedHTML)
+		stickerID, sticker := createGrouping(plate, parsedHTML)
 
 		if persist {
-			saveRequest(plate, sticker)
+			saveRequest(plate, stickerID)
 		}
 
 		return sticker
@@ -73,36 +83,43 @@ func init() {
 	}
 }
 
-func createGrouping(plate string, html string) string {
-	var sticker string
+func createGrouping(plate string, html string) (int, string) {
+	var stickerID int
+	var stickerDesc string
 
 	if strings.Contains(html, NotFound) {
 		groupNotFound = append(groupNotFound, plate)
-		sticker = "❌ " + NotFound
+		stickerID = notFound
+		stickerDesc = "❌ " + NotFound
 	} else if strings.Contains(html, stickerB) {
 		groupB = append(groupB, plate)
-		sticker = "🟡 " + stickerB
+		stickerID = stickerBID
+		stickerDesc = "🟡 " + stickerB
 	} else if strings.Contains(html, stickerC) {
 		groupC = append(groupC, plate)
-		sticker = "🟢 " + stickerC
+		stickerID = stickerCID
+		stickerDesc = "🟢 " + stickerC
 	} else if strings.Contains(html, stickerEco) {
 		groupEco = append(groupEco, plate)
-		sticker = "🟣 " + stickerEco
+		stickerID = stickerEcoID
+		stickerDesc = "🟣 " + stickerEco
 	} else if strings.Contains(html, stickerZero) {
 		groupZero = append(groupZero, plate)
-		sticker = "🔵 " + stickerZero
+		stickerID = stickerZeroID
+		stickerDesc = "🔵 " + stickerZero
 	} else if strings.Contains(html, noSticker) {
+		stickerID = noStickerID
 		groupNoSticker = append(groupNoSticker, plate)
-		sticker = "⚪️ " + noSticker
+		stickerDesc = "⚪️ " + noSticker
 	}
 
-	if sticker == "" {
-		sticker = html
+	if stickerDesc == "" {
+		stickerDesc = html
 	}
 
-	return sticker
+	return stickerID, stickerDesc
 }
 
-func saveRequest(plate string, sticker string) {
-	mysql.InsertPlate(plate, sticker)
+func saveRequest(plate string, stickerID int) {
+	mysql.InsertPlate(plate, stickerID)
 }

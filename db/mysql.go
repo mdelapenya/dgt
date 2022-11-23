@@ -12,12 +12,12 @@ var pwd = os.Getenv("MYSQL_ROOT_PASSWORD")
 var dbServer = os.Getenv("MYSQL_SERVER")
 var dsn = "root:" + pwd + "@tcp(" + dbServer + ":3306)/dgt"
 
-const insertSQL = "INSERT INTO plates(plate, sticker, counts) VALUES(?,?,1)"
+const insertSQL = "INSERT INTO plates(plate, sticker_id, counts) VALUES(?,?,1)"
 const selectSQL = "SELECT COUNT(1) as count FROM plates WHERE plate=?"
-const updateSQL = "UPDATE plates SET counts=counts+1, sticker=? WHERE plate=?"
+const updateSQL = "UPDATE plates SET counts=counts+1, sticker_id=? WHERE plate=?"
 
 // InsertPlate inserts plate into the database, checking if it previously exists
-func InsertPlate(plate string, sticker string) {
+func InsertPlate(plate string, stickerID int) {
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		log.Printf("Error opening the database connection: %s", err.Error())
@@ -41,18 +41,18 @@ func InsertPlate(plate string, sticker string) {
 	}
 
 	var saveSQL string
-	var arg1 string
-	var arg2 string
+	var arg1 any
+	var arg2 any
 
 	if count == 0 {
 		// new plate
 		saveSQL = insertSQL
 		arg1 = plate
-		arg2 = sticker
+		arg2 = stickerID
 	} else {
 		// the plate already exists
 		saveSQL = updateSQL
-		arg1 = sticker
+		arg1 = stickerID
 		arg2 = plate
 	}
 
