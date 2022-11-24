@@ -18,7 +18,7 @@ var from string
 func init() {
 	scrapCmd.Flags().StringVarP(&from, "from", "F", "", "Plate where to scrap from")
 	scrapCmd.Flags().BoolVarP(&persist, "persist", "p", false, "If the result will be persisted in a data store")
-	scrapCmd.Flags().StringVarP(&plate, "plate", "P", "", "Plate to scrap")
+	scrapCmd.Flags().StringVarP(&plate, "plate", "P", "", "Plate to scrap. It will ignore the 'persist' flag")
 
 	rootCmd.AddCommand(scrapCmd)
 }
