@@ -42,13 +42,13 @@ var groupC = []string{}
 var groupB = []string{}
 
 // ProcessPlate fetches plate information from DGT web site, using scrapping techniques
-func ProcessPlate(plate string, persist bool) string {
+func ProcessPlate(plate string, persist bool) (string, error) {
 	url := fmt.Sprintf("https://sede.dgt.gob.es/es/vehiculos/distintivo-ambiental/?accion=1&matriculahd=&matricula=%s&submit=Consultar", plate)
 
 	// Create and modify HTTP request before sending
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		log.Fatal(err)
+		return "", err
 	}
 	req.Header.Set("User-Agent", userAgent)
 
@@ -56,6 +56,7 @@ func ProcessPlate(plate string, persist bool) string {
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Printf("%s: Error while reading remote service", plate)
+		return "", err
 	}
 	defer resp.Body.Close()
 
@@ -71,10 +72,10 @@ func ProcessPlate(plate string, persist bool) string {
 			saveRequest(plate, stickerID)
 		}
 
-		return sticker
+		return sticker, nil
 	}
 
-	return "Not found"
+	return "Not found", fmt.Errorf("%s: plate not found", plate)
 }
 
 func init() {

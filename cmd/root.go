@@ -28,7 +28,11 @@ func Execute() {
 func fetchPlate(c *gin.Context) {
 	plate := c.Param("plate")
 
-	sticker := scrap.ProcessPlate(plate, true)
+	sticker, err := scrap.ProcessPlate(plate, false)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
 	status := http.StatusOK
 

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/mdelapenya/dgt/internal"
@@ -37,9 +38,14 @@ var scrapCmd = &cobra.Command{
 	},
 }
 
-func scrapPlate(plate string, persist bool) {
-	sticker := scrap.ProcessPlate(plate, persist)
+func scrapPlate(plate string, persist bool) error {
+	sticker, err := scrap.ProcessPlate(plate, persist)
+	if err != nil {
+		return err
+	}
+
 	fmt.Printf("%s: %s\n", plate, sticker)
+	return nil
 }
 
 func scrapPlates(fromPlate string) {
@@ -71,5 +77,8 @@ func processPlate(number int, c1 rune, c2 rune, c3 rune, persist bool) {
 	sb.WriteRune(c2)
 	sb.WriteRune(c3)
 
-	scrapPlate(sb.String(), persist)
+	err := scrapPlate(sb.String(), persist)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
