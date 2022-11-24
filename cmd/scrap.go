@@ -52,13 +52,7 @@ func scrapPlates(fromPlate string) {
 			for c := thirdChar; c < len(chars); c++ {
 				c3 := chars[c]
 				for i := initialIndex; i < 10000; i++ {
-					var sb strings.Builder
-					sb.WriteString(internal.FormatNumber(i))
-					sb.WriteRune(c1)
-					sb.WriteRune(c2)
-					sb.WriteRune(c3)
-
-					scrapPlate(sb.String(), persist)
+					processPlate(i, c1, c2, c3, persist)
 				}
 				initialIndex = 0
 				thirdChar = 0
@@ -67,4 +61,15 @@ func scrapPlates(fromPlate string) {
 		}
 		firstChar = 0
 	}
+}
+
+func processPlate(number int, c1 rune, c2 rune, c3 rune, persist bool) {
+	var sb strings.Builder
+
+	sb.WriteString(internal.FormatNumber(number))
+	sb.WriteRune(c1)
+	sb.WriteRune(c2)
+	sb.WriteRune(c3)
+
+	scrapPlate(sb.String(), persist)
 }
