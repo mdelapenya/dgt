@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/mdelapenya/dgt/internal"
@@ -10,9 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const alphabet = "BCDFGHJKLMNPQRSTVWXYZ"
-
-var chars = []rune(alphabet)
+var chars = []rune(internal.Alphabet)
 
 var persist bool
 var plate string
@@ -46,25 +43,7 @@ func scrapPlate(plate string, persist bool) {
 }
 
 func scrapPlates(fromPlate string) {
-	fromPlate = strings.ToLower(fromPlate)
-
-	initialIndex := 0
-	firstChar := 0
-	secondChar := 0
-	thirdChar := 0
-
-	if fromPlate != "" {
-		plateNumber, err := strconv.Atoi(string(fromPlate[0:4]))
-		if err == nil {
-			initialIndex = plateNumber
-		}
-
-		lowerCaseAlphabet := strings.ToLower(alphabet)
-
-		firstChar = strings.IndexRune(lowerCaseAlphabet, rune(fromPlate[4]))
-		secondChar = strings.IndexRune(lowerCaseAlphabet, rune(fromPlate[5]))
-		thirdChar = strings.IndexRune(lowerCaseAlphabet, rune(fromPlate[6]))
-	}
+	initialIndex, firstChar, secondChar, thirdChar := internal.FromPlate(fromPlate)
 
 	for a := firstChar; a < len(chars); a++ {
 		c1 := chars[a]
