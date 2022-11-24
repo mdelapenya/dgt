@@ -56,10 +56,8 @@ func scrapPlates(fromPlate string) {
 		for b := secondChar; b < len(chars); b++ {
 			c2 := chars[b]
 			for c := thirdChar; c < len(chars); c++ {
-				c3 := chars[c]
-				for i := initialIndex; i < 10000; i++ {
-					processPlate(i, c1, c2, c3, persist)
-				}
+				processPlates(initialIndex, c1, c2, c, persist)
+
 				initialIndex = 0
 				thirdChar = 0
 			}
@@ -80,5 +78,12 @@ func processPlate(number int, c1 rune, c2 rune, c3 rune, persist bool) {
 	err := scrapPlate(sb.String(), persist)
 	if err != nil {
 		log.Fatal(err)
+	}
+}
+
+func processPlates(initialIndex int, c1 rune, c2 rune, thirdChar int, persist bool) {
+	c3 := chars[thirdChar]
+	for i := initialIndex; i < 10000; i++ {
+		processPlate(i, c1, c2, c3, persist)
 	}
 }
