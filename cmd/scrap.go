@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/mdelapenya/dgt/internal"
 	"github.com/mdelapenya/dgt/scrap"
 	"github.com/spf13/cobra"
 )
@@ -37,22 +38,6 @@ var scrapCmd = &cobra.Command{
 
 		scrapPlates(from)
 	},
-}
-
-func formatNumber(n int) string {
-	if n < 10 {
-		return fmt.Sprintf("000%d", n)
-	}
-
-	if n < 100 {
-		return fmt.Sprintf("00%d", n)
-	}
-
-	if n < 1000 {
-		return fmt.Sprintf("0%d", n)
-	}
-
-	return fmt.Sprintf("%d", n)
 }
 
 func scrapPlate(plate string, persist bool) {
@@ -89,7 +74,7 @@ func scrapPlates(fromPlate string) {
 				c3 := chars[c]
 				for i := initialIndex; i < 10000; i++ {
 					var sb strings.Builder
-					sb.WriteString(formatNumber(i))
+					sb.WriteString(internal.FormatNumber(i))
 					sb.WriteRune(c1)
 					sb.WriteRune(c2)
 					sb.WriteRune(c3)
