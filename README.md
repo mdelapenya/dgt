@@ -20,7 +20,8 @@ Flags:
   -F, --from string    Plate where to scrap from
   -h, --help           help for scrap
   -p, --persist        If the result will be persisted in a data store
-  -P, --plate string   Plate to scrap
+  -P, --plate string   Plate to scrap. It will ignore the 'persist' flag
+  -U, --until string   Plate where to scrap until (included)
 ```
 
 ### Flags
