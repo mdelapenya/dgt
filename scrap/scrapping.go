@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	retry "github.com/avast/retry-go/v4"
 	mysql "github.com/mdelapenya/dgt/db"
 	"github.com/mdelapenya/dgt/parser"
 )
@@ -45,37 +46,47 @@ var groupB = []string{}
 func ProcessPlate(plate string, persist bool) (string, error) {
 	url := fmt.Sprintf("https://sede.dgt.gob.es/es/vehiculos/distintivo-ambiental/?accion=1&matriculahd=&matricula=%s&submit=Consultar", plate)
 
-	// Create and modify HTTP request before sending
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return "", err
-	}
-	req.Header.Set("User-Agent", userAgent)
+	var stickerID int
+	var sticker string
 
-	// Make request
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Printf("%s: Error while reading remote service", plate)
-		return "", err
-	}
-	defer resp.Body.Close()
+	err := retry.Do(func() error {
+		// Create and modify HTTP request before sending
+		req, err := http.NewRequest("GET", url, nil)
+		if err != nil {
+			return err
+		}
+		req.Header.Set("User-Agent", userAgent)
 
-	if resp.StatusCode == http.StatusOK {
-		bodyBytes, _ := ioutil.ReadAll(resp.Body)
+		// Make request
+		resp, err := client.Do(req)
+		if err != nil {
+			log.Printf("%s: Error while reading remote service", plate)
+			return err
+		}
+		defer resp.Body.Close()
 
-		htmlResult := string(bodyBytes)
-		parsedHTML := parser.Parse(htmlResult)
+		if resp.StatusCode == http.StatusOK {
+			bodyBytes, _ := ioutil.ReadAll(resp.Body)
 
-		stickerID, sticker := createGrouping(plate, parsedHTML)
+			htmlResult := string(bodyBytes)
+			parsedHTML := parser.Parse(htmlResult)
 
-		if persist {
-			saveRequest(plate, stickerID)
+			stickerID, sticker = createGrouping(plate, parsedHTML)
+
+			return nil
 		}
 
-		return sticker, nil
+		return fmt.Errorf("%s: plate not found. HTTP Code: %d", plate, resp.StatusCode)
+	}, retry.Attempts(3), retry.Delay(1*time.Second))
+	if err != nil {
+		return "", err
 	}
 
-	return "Not found", fmt.Errorf("%s: plate not found", plate)
+	if persist {
+		saveRequest(plate, stickerID)
+	}
+
+	return sticker, nil
 }
 
 func init() {
