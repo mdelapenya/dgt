@@ -11,6 +11,107 @@ services:
     environment:
       - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
+
+  go-b:
+    build: .
+    command: "scrap --persist --from 0000BBB --until 9999BZZ"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - MYSQL_SERVER=db
+      - MYSQL_ROOT_PASSWORD=passw0rd
+
+  go-c:
+    build: .
+    command: "scrap --persist --from 0000CBB --until 9999CZZ"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - MYSQL_SERVER=db
+      - MYSQL_ROOT_PASSWORD=passw0rd
+
+  go-d:
+    build: .
+    command: "scrap --persist --from 0000DBB --until 9999DZZ"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - MYSQL_SERVER=db
+      - MYSQL_ROOT_PASSWORD=passw0rd
+
+  go-f:
+    build: .
+    command: "scrap --persist --from 0000FBB --until 9999FZZ"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - MYSQL_SERVER=db
+      - MYSQL_ROOT_PASSWORD=passw0rd
+
+  go-g:
+    build: .
+    command: "scrap --persist --from 0000GBB --until 9999GZZ"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - MYSQL_SERVER=db
+      - MYSQL_ROOT_PASSWORD=passw0rd
+
+  go-h:
+    build: .
+    command: "scrap --persist --from 0000HBB --until 9999HZZ"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - MYSQL_SERVER=db
+      - MYSQL_ROOT_PASSWORD=passw0rd
+
+  go-j:
+    build: .
+    command: "scrap --persist --from 0000JBB --until 9999JZZ"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - MYSQL_SERVER=db
+      - MYSQL_ROOT_PASSWORD=passw0rd
+
+  go-k:
+    build: .
+    command: "scrap --persist --from 0000KBB --until 9999KZZ"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - MYSQL_SERVER=db
+      - MYSQL_ROOT_PASSWORD=passw0rd
+
+  go-l:
+    build: .
+    command: "scrap --persist --from 0000LBB --until 9999LZZ"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - MYSQL_SERVER=db
+      - MYSQL_ROOT_PASSWORD=passw0rd
+
+  go-m:
+    build: .
+    command: "scrap --persist --from 0000MBB --until 9999MCZ"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - MYSQL_SERVER=db
+      - MYSQL_ROOT_PASSWORD=passw0rd
+
   db:
     build: ./database
     environment:

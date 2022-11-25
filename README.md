@@ -62,16 +62,22 @@ $ docker run --rm  mdelapenya/dgt:latest scrap --from 0000LSL --until 1000LSL
 ```
 
 ## Docker Compose
-Es posible ejecutar la herramienta como un stack de Docker Compose, incluyendo el servidor web con el API de matrículas así como una base de datos MySQL para la persistencia de los datos.
+Es posible ejecutar la herramienta como un stack de Docker Compose, incluyendo el servidor web con el API de matrículas así como una base de datos MySQL para la persistencia de los datos. Además, se levantarán tantos contenedores como letras llevamos en las matrículas (de la B a la M), que ejecutarán en su arranque la CLI para escanear todas las matrículas que comiencen por dicha letra, terminando en la última matrícula de la serie.
+
+```shell
 
 ```shell
 $ docker compose up --build
 ```
 
-De esta manera es posible levantar el stack, y utilizar además la CLI para consultar las matrículas, aunque para ello es necesario indicar la contraseña y la ubicación de la base de datos:
+Accediendo a la base de datos es posible consultar las matrículas procesadas y sus distintivos:
 
 ```shell
-MYSQL_ROOT_PASSWORD=passw0rd MYSQL_SERVER=localhost go run main.go scrap -p
+$ docker exec -it dgt-db-1 mysql -u root -ppassw0rd --database=dgt
+# retornar todas las matrículas
+mysql> select p.plate, s.description, s.emoji from plates p, stickers s where s.sticker_id=p.sticker_id;
+# agregar matrículas por distintivo
+mysql> select s.description, s.emoji, count(1) as count from plates p, stickers s where s.sticker_id=p.sticker_id group by s.sticker_id;
 ```
 
 ## Plates API
