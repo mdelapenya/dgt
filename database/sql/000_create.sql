@@ -21,3 +21,5 @@ CREATE TABLE IF NOT EXISTS plates (
     PRIMARY KEY (plate_id),
     FOREIGN KEY (sticker_id) REFERENCES stickers(sticker_id)
 )  ENGINE=INNODB;
+
+CREATE INDEX idx_plates ON plates (plate);
