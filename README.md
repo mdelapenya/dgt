@@ -81,6 +81,18 @@ mysql> select p.plate, s.description, s.emoji from plates p, stickers s where s.
 mysql> select s.description, s.emoji, count(1) as count from plates p, stickers s where s.sticker_id=p.sticker_id group by s.sticker_id;
 ```
 
+### Dump de la base de datos
+
+Si necesitas extraer la base de datos, ejecuta el siguiente script:
+
+```shell
+./backup.sh
+```
+
+Un fichero SQL se creará en el directorio `database/sql` con el nombre `001_dgt.sql`, de modo que si recreas la ejecución desde cero, la base de datos aparecerá pre-cargada.
+
+Importante decir que tendrás que actualizar las matrículas a utilizar en el fichero `docker-compose.yml`, para que no se solapen con las que ya están en la base de datos. Lee el siguiente apartado.
+
 ### Errores de memoria
 
 Si por alguna razón se queda sin memoria el equipo en el que se ejecuta, puedes ejecutar el siguiente script:
