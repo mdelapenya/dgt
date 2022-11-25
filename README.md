@@ -83,7 +83,15 @@ mysql> select s.description, s.emoji, count(1) as count from plates p, stickers 
 
 ### Errores de memoria
 
-Si por alguna razón se queda sin memoria el equipo en el que se ejecuta, puedes hacer lo siguiente:
+Si por alguna razón se queda sin memoria el equipo en el que se ejecuta, puedes ejecutar el siguiente script:
+  
+```shell
+./oom.sh
+```
+
+Generará un fichero `plates.txt` en el directorio actual, con la última matrícula procesada, que puedes usar para reanudar el proceso.
+
+Básicamente, el script hace lo siguiente:
 
 1. para todos los servicios menos la base de datos:
 
@@ -94,18 +102,12 @@ $ docker stop dgt-go-j-1 dgt-go-l-1 dgt-go-f-1 dgt-go-h-1 dgt-go-c-1 dgt-go-k-1 
 2. detecta en qué punto se quedaron cada uno de los servicios:
 
 ```shell
-# contecta al servicio de la base de datos
-$ docker exec -it dgt-db-1 mysql -u root -ppassw0rd --database=dgt
-# consulta la última matrícula procesada, para cada letra, en este caso la M
-mysql> select * from plates where plate_id=(select plate_id from plates where plate like "____M__" order by substr(plate from 5 for 8) desc limit 1);
+# ejecuta una consulta en servicio de la base de datos, obteniendo el valor de la última matrícula procesada, en este caso para la letra M
+$ docker exec -it dgt-db-1 mysql -u root -ppassw0rd --database=dgt -e "select plate from plates where plate_id=(select plate_id from plates where plate like '____M__' order by plate_id desc limit 1);" >> ./plates.txt
 ```
 
-3. Coge esa matrícula y cambia el valor del flag `--from` en el fichero `docker-compose.yml` para que sea la siguiente a la última procesada.
-4. Arranca los servicios de nuevo con `docker compose`, para que coja los nuevos valores de matrícula desde los que empezar a procesar:
-
-```shell
-docker compose up
-```
+3. Coge esas matrículas y cambia el valor del flag `--from` para el servicio de cada letra en el fichero `docker-compose.yml` para que sea la siguiente a la última procesada.
+4. Arranca los servicios de nuevo con `docker compose up`, para que coja los nuevos valores de matrícula desde los que empezar a procesar.
 
 ## Plates API
 
