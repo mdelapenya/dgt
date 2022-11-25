@@ -7,10 +7,10 @@ services:
       resources:
         limits:
           cpus: '1.0'
-          memory: 512M
+          memory: 128M
         reservations:
           cpus: '0.25'
-          memory: 256M
+          memory: 64M
     depends_on:
       db:
         condition: service_healthy
@@ -28,15 +28,15 @@ services:
         condition: service_started
       db:
         condition: service_healthy
-    memswap_limit: 512M
+    memswap_limit: 128M
     deploy:
       resources:
         limits:
           cpus: '1.0'
-          memory: 512M
+          memory: 128M
         reservations:
           cpus: '0.25'
-          memory: 256M
+          memory: 64M
     environment:
       - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
@@ -49,15 +49,15 @@ services:
         condition: service_started 
       db:
         condition: service_healthy
-    memswap_limit: 512M
+    memswap_limit: 128M
     deploy:
       resources:
         limits:
           cpus: '1.0'
-          memory: 512M
+          memory: 128M
         reservations:
           cpus: '0.25'
-          memory: 256M
+          memory: 64M
     environment:
       - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
@@ -70,15 +70,15 @@ services:
         condition: service_started
       db:
         condition: service_healthy
-    memswap_limit: 512M
+    memswap_limit: 128M
     deploy:
       resources:
         limits:
           cpus: '1.0'
-          memory: 512M
+          memory: 128M
         reservations:
           cpus: '0.25'
-          memory: 256M
+          memory: 64M
     environment:
       - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
@@ -91,15 +91,15 @@ services:
         condition: service_started
       db:
         condition: service_healthy
-    memswap_limit: 512M
+    memswap_limit: 128M
     deploy:
       resources:
         limits:
           cpus: '1.0'
-          memory: 512M
+          memory: 128M
         reservations:
           cpus: '0.25'
-          memory: 256M
+          memory: 64M
     environment:
       - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
@@ -112,15 +112,15 @@ services:
         condition: service_started
       db:
         condition: service_healthy
-    memswap_limit: 512M
+    memswap_limit: 128M
     deploy:
       resources:
         limits:
           cpus: '1.0'
-          memory: 512M
+          memory: 128M
         reservations:
           cpus: '0.25'
-          memory: 256M
+          memory: 64M
     environment:
       - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
@@ -133,15 +133,15 @@ services:
         condition: service_started
       db:
         condition: service_healthy
-    memswap_limit: 512M
+    memswap_limit: 128M
     deploy:
       resources:
         limits:
           cpus: '1.0'
-          memory: 512M
+          memory: 128M
         reservations:
           cpus: '0.25'
-          memory: 256M
+          memory: 64M
     environment:
       - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
@@ -154,15 +154,15 @@ services:
         condition: service_started
       db:
         condition: service_healthy
-    memswap_limit: 512M
+    memswap_limit: 128M
     deploy:
       resources:
         limits:
           cpus: '1.0'
-          memory: 512M
+          memory: 128M
         reservations:
           cpus: '0.25'
-          memory: 256M
+          memory: 64M
     environment:
       - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
@@ -175,15 +175,15 @@ services:
         condition: service_started
       db:
         condition: service_healthy
-    memswap_limit: 512M
+    memswap_limit: 128M
     deploy:
       resources:
         limits:
           cpus: '1.0'
-          memory: 512M
+          memory: 128M
         reservations:
           cpus: '0.25'
-          memory: 256M
+          memory: 64M
     environment:
       - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
@@ -196,15 +196,15 @@ services:
         condition: service_started
       db:
         condition: service_healthy
-    memswap_limit: 512M
+    memswap_limit: 128M
     deploy:
       resources:
         limits:
           cpus: '1.0'
-          memory: 512M
+          memory: 128M
         reservations:
           cpus: '0.25'
-          memory: 256M
+          memory: 64M
     environment:
       - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
@@ -217,15 +217,15 @@ services:
         condition: service_started
       db:
         condition: service_healthy
-    memswap_limit: 512M
+    memswap_limit: 128M
     deploy:
       resources:
         limits:
           cpus: '1.0'
-          memory: 512M
+          memory: 128M
         reservations:
           cpus: '0.25'
-          memory: 256M
+          memory: 64M
     environment:
       - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
