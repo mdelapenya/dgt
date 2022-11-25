@@ -8,7 +8,6 @@ import (
 	"strings"
 	"time"
 
-	retry "github.com/avast/retry-go/v4"
 	mysql "github.com/mdelapenya/dgt/db"
 	"github.com/mdelapenya/dgt/parser"
 )
@@ -46,47 +45,37 @@ var groupB = []string{}
 func ProcessPlate(plate string, persist bool) (string, error) {
 	url := fmt.Sprintf("https://sede.dgt.gob.es/es/vehiculos/distintivo-ambiental/?accion=1&matriculahd=&matricula=%s&submit=Consultar", plate)
 
-	var stickerID int
-	var sticker string
-
-	err := retry.Do(func() error {
-		// Create and modify HTTP request before sending
-		req, err := http.NewRequest("GET", url, nil)
-		if err != nil {
-			return err
-		}
-		req.Header.Set("User-Agent", userAgent)
-
-		// Make request
-		resp, err := client.Do(req)
-		if err != nil {
-			log.Printf("%s: Error while reading remote service", plate)
-			return err
-		}
-		defer resp.Body.Close()
-
-		if resp.StatusCode == http.StatusOK {
-			bodyBytes, _ := ioutil.ReadAll(resp.Body)
-
-			htmlResult := string(bodyBytes)
-			parsedHTML := parser.Parse(htmlResult)
-
-			stickerID, sticker = createGrouping(plate, parsedHTML)
-
-			return nil
-		}
-
-		return fmt.Errorf("%s: plate not found. HTTP Code: %d", plate, resp.StatusCode)
-	}, retry.Attempts(3), retry.Delay(1*time.Second))
+	// Create and modify HTTP request before sending
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return "", err
 	}
+	req.Header.Set("User-Agent", userAgent)
 
-	if persist {
-		saveRequest(plate, stickerID)
+	// Make request
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Printf("%s: Error while reading remote service", plate)
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusOK {
+		bodyBytes, _ := ioutil.ReadAll(resp.Body)
+
+		htmlResult := string(bodyBytes)
+		parsedHTML := parser.Parse(htmlResult)
+
+		stickerID, sticker := createGrouping(plate, parsedHTML)
+
+		if persist {
+			saveRequest(plate, stickerID)
+		}
+
+		return sticker, nil
 	}
 
-	return sticker, nil
+	return "Not found", fmt.Errorf("%s: plate not found", plate)
 }
 
 func init() {
