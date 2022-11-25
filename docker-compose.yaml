@@ -3,6 +3,14 @@ services:
   go:
     build: .
     command: "${DGT_CMD:-}"
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
     depends_on:
       db:
         condition: service_healthy
@@ -20,6 +28,14 @@ services:
         condition: service_started
       db:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
     environment:
       - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
@@ -32,6 +48,14 @@ services:
         condition: service_started 
       db:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
     environment:
       - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
@@ -44,6 +68,14 @@ services:
         condition: service_started
       db:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
     environment:
       - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
@@ -56,6 +88,14 @@ services:
         condition: service_started
       db:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
     environment:
       - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
@@ -68,6 +108,14 @@ services:
         condition: service_started
       db:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
     environment:
       - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
@@ -80,6 +128,14 @@ services:
         condition: service_started
       db:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
     environment:
       - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
@@ -92,6 +148,14 @@ services:
         condition: service_started
       db:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
     environment:
       - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
@@ -104,6 +168,14 @@ services:
         condition: service_started
       db:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
     environment:
       - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
@@ -116,6 +188,14 @@ services:
         condition: service_started
       db:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
     environment:
       - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
@@ -128,6 +208,14 @@ services:
         condition: service_started
       db:
         condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
     environment:
       - MYSQL_SERVER=db
       - MYSQL_ROOT_PASSWORD=passw0rd
@@ -145,3 +233,11 @@ services:
       retries: 10
     ports:
         - 3306:3306
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1024M
+        reservations:
+          cpus: '0.50'
+          memory: 512M
