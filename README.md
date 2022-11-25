@@ -81,6 +81,32 @@ mysql> select p.plate, s.description, s.emoji from plates p, stickers s where s.
 mysql> select s.description, s.emoji, count(1) as count from plates p, stickers s where s.sticker_id=p.sticker_id group by s.sticker_id;
 ```
 
+### Errores de memoria
+
+Si por alguna razón se queda sin memoria el equipo en el que se ejecuta, puedes hacer lo siguiente:
+
+1. para todos los servicios menos la base de datos:
+
+```shell 
+$ docker stop dgt-go-j-1 dgt-go-l-1 dgt-go-f-1 dgt-go-h-1 dgt-go-c-1 dgt-go-k-1 dgt-go-m-1 dgt-go-b-1 dgt-go-g-1 dgt-go-d-1
+```
+
+2. detecta en qué punto se quedaron cada uno de los servicios:
+
+```shell
+# contecta al servicio de la base de datos
+$ docker exec -it dgt-db-1 mysql -u root -ppassw0rd --database=dgt
+# consulta la última matrícula procesada, para cada letra, en este caso la M
+mysql> select * from plates where plate_id=(select plate_id from plates where plate like "____M__" order by substr(plate from 5 for 8) desc limit 1);
+```
+
+3. Coge esa matrícula y cambia el valor del flag `--from` en el fichero `docker-compose.yml` para que sea la siguiente a la última procesada.
+4. Arranca los servicios de nuevo con `docker compose`, para que coja los nuevos valores de matrícula desde los que empezar a procesar:
+
+```shell
+docker compose up
+```
+
 ## Plates API
 
 ### Get sticker for a plate
