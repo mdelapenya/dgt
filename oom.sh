@@ -16,4 +16,4 @@ docker exec -it dgt-db-1 mysql -u root -ppassw0rd --database=dgt -e "select plat
 docker exec -it dgt-db-1 mysql -u root -ppassw0rd --database=dgt -e "select plate from plates where plate_id=(select plate_id from plates where plate like '____L__' order by plate_id desc limit 1);" >> ./plates.txt
 docker exec -it dgt-db-1 mysql -u root -ppassw0rd --database=dgt -e "select plate from plates where plate_id=(select plate_id from plates where plate like '____M__' order by plate_id desc limit 1);" >> ./plates.txt
 
-cat ./plates.txt | grep -v "mysql" | grep -v '-' | grep -v 'plate'
+echo $(cat ./plates.txt | grep -v "mysql" | grep -v '-' | grep -v 'plate' | grep -v '=' | grep -v 'PLATE') > ./plates.txt
