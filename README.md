@@ -121,6 +121,10 @@ $ docker exec -it dgt-db-1 mysql -u root -ppassw0rd --database=dgt -e "select pl
 3. Coge esas matrículas y cambia el valor del flag `--from` para el servicio de cada letra en el fichero `docker-compose.yml` para que sea la siguiente a la última procesada.
 4. Arranca los servicios de nuevo con `docker compose up`, para que coja los nuevos valores de matrícula desde los que empezar a procesar.
 
+```shell
+./restart.sh
+```
+
 ## Plates API
 
 ### Get sticker for a plate
