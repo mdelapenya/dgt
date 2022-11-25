@@ -13,9 +13,11 @@ services:
       - MYSQL_ROOT_PASSWORD=passw0rd
 
   go-b:
-    build: .
+    image: dgt-go:latest
     command: "scrap --persist --from 0000BBB --until 9999BZZ"
     depends_on:
+      go:
+        condition: service_started
       db:
         condition: service_healthy
     environment:
@@ -23,9 +25,11 @@ services:
       - MYSQL_ROOT_PASSWORD=passw0rd
 
   go-c:
-    build: .
+    image: dgt-go:latest
     command: "scrap --persist --from 0000CBB --until 9999CZZ"
     depends_on:
+      go:
+        condition: service_started 
       db:
         condition: service_healthy
     environment:
@@ -33,9 +37,11 @@ services:
       - MYSQL_ROOT_PASSWORD=passw0rd
 
   go-d:
-    build: .
+    image: dgt-go:latest
     command: "scrap --persist --from 0000DBB --until 9999DZZ"
     depends_on:
+      go:
+        condition: service_started
       db:
         condition: service_healthy
     environment:
@@ -43,9 +49,11 @@ services:
       - MYSQL_ROOT_PASSWORD=passw0rd
 
   go-f:
-    build: .
+    image: dgt-go:latest
     command: "scrap --persist --from 0000FBB --until 9999FZZ"
     depends_on:
+      go:
+        condition: service_started
       db:
         condition: service_healthy
     environment:
@@ -53,9 +61,11 @@ services:
       - MYSQL_ROOT_PASSWORD=passw0rd
 
   go-g:
-    build: .
+    image: dgt-go:latest
     command: "scrap --persist --from 0000GBB --until 9999GZZ"
     depends_on:
+      go:
+        condition: service_started
       db:
         condition: service_healthy
     environment:
@@ -63,9 +73,11 @@ services:
       - MYSQL_ROOT_PASSWORD=passw0rd
 
   go-h:
-    build: .
+    image: dgt-go:latest
     command: "scrap --persist --from 0000HBB --until 9999HZZ"
     depends_on:
+      go:
+        condition: service_started
       db:
         condition: service_healthy
     environment:
@@ -73,9 +85,11 @@ services:
       - MYSQL_ROOT_PASSWORD=passw0rd
 
   go-j:
-    build: .
+    image: dgt-go:latest
     command: "scrap --persist --from 0000JBB --until 9999JZZ"
     depends_on:
+      go:
+        condition: service_started
       db:
         condition: service_healthy
     environment:
@@ -83,9 +97,11 @@ services:
       - MYSQL_ROOT_PASSWORD=passw0rd
 
   go-k:
-    build: .
+    image: dgt-go:latest
     command: "scrap --persist --from 0000KBB --until 9999KZZ"
     depends_on:
+      go:
+        condition: service_started
       db:
         condition: service_healthy
     environment:
@@ -93,9 +109,11 @@ services:
       - MYSQL_ROOT_PASSWORD=passw0rd
 
   go-l:
-    build: .
+    image: dgt-go:latest
     command: "scrap --persist --from 0000LBB --until 9999LZZ"
     depends_on:
+      go:
+        condition: service_started
       db:
         condition: service_healthy
     environment:
@@ -103,9 +121,11 @@ services:
       - MYSQL_ROOT_PASSWORD=passw0rd
 
   go-m:
-    build: .
+    image: dgt-go:latest
     command: "scrap --persist --from 0000MBB --until 9999MCZ"
     depends_on:
+      go:
+        condition: service_started
       db:
         condition: service_healthy
     environment:
