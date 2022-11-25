@@ -28,6 +28,7 @@ Flags:
 | Flag      | Short version | Type    | Default | Requerido | Descripción                                                 |
 | --------- | --------------| ------- | --------| --------- | ----------------------------------------------------------- |
 | --from    | -F            | string  |         | no        | Una matrícula válida desde la que empezar el procesado      |
+| --until   | -U            | string  |         | no        | Una matrícula válida en la que terminar el procesado      |
 | --persist | -p            | boolean | no      | no        | Si es necesario persistir el resultado en un almacenamiento |
 | --plate   | -P            | string  |         | no        | Si tiene valor, únicamente se procesará esa matrícula       |
 
@@ -52,6 +53,12 @@ $ docker run --rm  mdelapenya/dgt:latest scrap
 Ésto es útil para saber por qué matrícula vamos:
 ```shell
 $ docker run --rm  mdelapenya/dgt:latest scrap --from 9334LSL
+```
+
+#### Escanear todas las mátriculas desde una hasta otra
+Ésto es útil para saber por qué matrícula vamos:
+```shell
+$ docker run --rm  mdelapenya/dgt:latest scrap --from 0000LSL --until 1000LSL
 ```
 
 ## Docker Compose
