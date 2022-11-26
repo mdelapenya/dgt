@@ -81,6 +81,12 @@ mysql> select p.plate, s.description, s.emoji from plates p, stickers s where s.
 mysql> select s.description, s.emoji, count(1) as count from plates p, stickers s where s.sticker_id=p.sticker_id group by s.sticker_id;
 ```
 
+O utilizando el siguiente script:
+  
+```shell
+./scripts/count.sh
+```
+
 ### Dump de la base de datos
 
 Si necesitas extraer la base de datos, ejecuta el siguiente script:
