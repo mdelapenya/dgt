@@ -86,7 +86,7 @@ mysql> select s.description, s.emoji, count(1) as count from plates p, stickers 
 Si necesitas extraer la base de datos, ejecuta el siguiente script:
 
 ```shell
-./backup.sh
+./scripts/backup.sh
 ```
 
 Un fichero SQL se creará en el directorio `database/sql` con el nombre `001_dgt.sql`, de modo que si recreas la ejecución desde cero, la base de datos aparecerá pre-cargada.
@@ -98,7 +98,7 @@ Importante decir que tendrás que actualizar las matrículas a utilizar en el fi
 Si por alguna razón se queda sin memoria el equipo en el que se ejecuta, puedes ejecutar el siguiente script:
   
 ```shell
-./oom.sh
+./scripts/oom.sh
 ```
 
 Generará un fichero `plates.txt` en el directorio actual, con la última matrícula procesada, que puedes usar para reanudar el proceso.
@@ -122,7 +122,7 @@ $ docker exec -it dgt-db-1 mysql -u root -ppassw0rd --database=dgt -e "select pl
 4. Arranca los servicios de nuevo con `docker compose up`, para que coja los nuevos valores de matrícula desde los que empezar a procesar.
 
 ```shell
-./restart.sh
+./scripts/restart.sh
 ```
 
 ## Plates API
