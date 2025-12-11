@@ -6,10 +6,10 @@ CREATE TABLE IF NOT EXISTS stickers (
 )  ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 INSERT INTO stickers (description, emoji) VALUES ('Sin distintivo', '⚪️');
-INSERT INTO stickers (description, emoji) VALUES ('Etiqueta Ambiental B Amarilla', '🟡');
-INSERT INTO stickers (description, emoji) VALUES ('Etiqueta Ambiental C Verde', '🟢');
-INSERT INTO stickers (description, emoji) VALUES ('Etiqueta Ambiental Eco', '🟣');
-INSERT INTO stickers (description, emoji) VALUES ('Etiqueta Ambiental 0', '🔵');
+INSERT INTO stickers (description, emoji) VALUES ('Distintivo Ambiental B.', '🟡');
+INSERT INTO stickers (description, emoji) VALUES ('Distintivo Ambiental C.', '🟢');
+INSERT INTO stickers (description, emoji) VALUES ('Distintivo Ambiental ECO.', '🟣');
+INSERT INTO stickers (description, emoji) VALUES ('Distintivo Ambiental 0.', '🔵');
 INSERT INTO stickers (description, emoji) VALUES ('No se ha encontrado ningún resultado para la matrícula introducida', '❌');
 
 CREATE TABLE IF NOT EXISTS plates (
