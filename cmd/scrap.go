@@ -72,7 +72,6 @@ func scrapPlates(fromPlate string, untilPlate string) {
 
 	// Create a pool of workers based on the number of CPUs
 	numWorkers := runtime.NumCPU()
-	runtime.GOMAXPROCS(numWorkers)
 
 	// Channel for distributing work to goroutines
 	tasks := make(chan plateTask, len(chars))
@@ -163,12 +162,20 @@ func processPlate(number int, c1 rune, c2 rune, c3 rune, persist bool) {
 // It will return true if the outer process should continue, or false if it should stop
 func processPlates(initialIndex int, c1 rune, c2 rune, thirdChar int, persist bool, untilPlate string) bool {
 	c3 := chars[thirdChar]
+	
+	// Parse the until plate once if provided
+	var shouldCheckUntil bool
+	var uInitialIndex, uFirstChar, uSecondChar, uThirdChar int
+	if untilPlate != "" {
+		shouldCheckUntil = true
+		uInitialIndex, uFirstChar, uSecondChar, uThirdChar = internal.FromPlate(untilPlate)
+	}
+	
 	for i := initialIndex; i < 10000; i++ {
 		processPlate(i, c1, c2, c3, persist)
 
 		// if the plate is the until plate, stop the process
-		uInitialIndex, uFirstChar, uSecondChar, uThirdChar := internal.FromPlate(untilPlate)
-		if i == uInitialIndex && c1 == chars[uFirstChar] && c2 == chars[uSecondChar] && c3 == chars[uThirdChar] {
+		if shouldCheckUntil && i == uInitialIndex && c1 == chars[uFirstChar] && c2 == chars[uSecondChar] && c3 == chars[uThirdChar] {
 			return false
 		}
 	}
