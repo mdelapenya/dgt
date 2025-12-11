@@ -58,16 +58,20 @@ type plateTask struct {
 	initialIndex int
 	secondChar   int
 	thirdChar    int
+	untilIndex   int
+	untilSecond  int
+	untilThird   int
+	hasUntil     bool
 }
 
 func scrapPlates(fromPlate string, untilPlate string) {
 	initialIndex, firstChar, secondChar, thirdChar := internal.FromPlate(fromPlate)
 
-	// Parse the until plate to determine stopping conditions
-	var uFirstChar int
+	// Parse the until plate once to determine stopping conditions
 	hasUntil := untilPlate != ""
+	var uInitialIndex, uFirstChar, uSecondChar, uThirdChar int
 	if hasUntil {
-		_, uFirstChar, _, _ = internal.FromPlate(untilPlate)
+		uInitialIndex, uFirstChar, uSecondChar, uThirdChar = internal.FromPlate(untilPlate)
 	}
 
 	// Create a pool of workers based on the number of CPUs
@@ -82,12 +86,12 @@ func scrapPlates(fromPlate string, untilPlate string) {
 	// Start worker goroutines
 	for i := 0; i < numWorkers; i++ {
 		wg.Add(1)
-		go worker(tasks, &wg, persist, untilPlate)
+		go worker(tasks, &wg, persist)
 	}
 
 	// Distribute tasks: one task per first character
 	for a := firstChar; a < len(chars); a++ {
-		// Skip characters beyond the until character
+		// Skip characters beyond the until character if until is specified
 		if hasUntil && a > uFirstChar {
 			break
 		}
@@ -97,6 +101,10 @@ func scrapPlates(fromPlate string, untilPlate string) {
 			initialIndex: initialIndex,
 			secondChar:   secondChar,
 			thirdChar:    thirdChar,
+			untilIndex:   uInitialIndex,
+			untilSecond:  uSecondChar,
+			untilThird:   uThirdChar,
+			hasUntil:     hasUntil,
 		}
 		tasks <- task
 		
@@ -114,16 +122,16 @@ func scrapPlates(fromPlate string, untilPlate string) {
 }
 
 // worker processes plateTask items from the tasks channel
-func worker(tasks <-chan plateTask, wg *sync.WaitGroup, persist bool, untilPlate string) {
+func worker(tasks <-chan plateTask, wg *sync.WaitGroup, persist bool) {
 	defer wg.Done()
 
 	for task := range tasks {
-		processFirstChar(task, persist, untilPlate)
+		processFirstChar(task, persist)
 	}
 }
 
 // processFirstChar processes all plates starting with a specific first character
-func processFirstChar(task plateTask, persist bool, untilPlate string) {
+func processFirstChar(task plateTask, persist bool) {
 	c1 := task.firstChar
 	initialIndex := task.initialIndex
 	secondChar := task.secondChar
@@ -132,7 +140,7 @@ func processFirstChar(task plateTask, persist bool, untilPlate string) {
 	for b := secondChar; b < len(chars); b++ {
 		c2 := chars[b]
 		for c := thirdChar; c < len(chars); c++ {
-			continueProcessing := processPlates(initialIndex, c1, c2, c, persist, untilPlate)
+			continueProcessing := processPlates(initialIndex, c1, c2, c, persist, task)
 			if !continueProcessing {
 				return
 			}
@@ -160,22 +168,14 @@ func processPlate(number int, c1 rune, c2 rune, c3 rune, persist bool) {
 
 // processPlates processes all the plates from the given initial index, until the given until plate
 // It will return true if the outer process should continue, or false if it should stop
-func processPlates(initialIndex int, c1 rune, c2 rune, thirdChar int, persist bool, untilPlate string) bool {
+func processPlates(initialIndex int, c1 rune, c2 rune, thirdChar int, persist bool, task plateTask) bool {
 	c3 := chars[thirdChar]
-	
-	// Parse the until plate once if provided
-	var shouldCheckUntil bool
-	var uInitialIndex, uFirstChar, uSecondChar, uThirdChar int
-	if untilPlate != "" {
-		shouldCheckUntil = true
-		uInitialIndex, uFirstChar, uSecondChar, uThirdChar = internal.FromPlate(untilPlate)
-	}
 	
 	for i := initialIndex; i < 10000; i++ {
 		processPlate(i, c1, c2, c3, persist)
 
 		// if the plate is the until plate, stop the process
-		if shouldCheckUntil && i == uInitialIndex && c1 == chars[uFirstChar] && c2 == chars[uSecondChar] && c3 == chars[uThirdChar] {
+		if task.hasUntil && i == task.untilIndex && c2 == chars[task.untilSecond] && c3 == chars[task.untilThird] {
 			return false
 		}
 	}

@@ -14,12 +14,20 @@ func TestPlateTaskCreation(t *testing.T) {
 		initialIndex: 1234,
 		secondChar:   5,
 		thirdChar:    10,
+		untilIndex:   5678,
+		untilSecond:  15,
+		untilThird:   20,
+		hasUntil:     true,
 	}
 
 	assert.Equal(t, 'B', task.firstChar)
 	assert.Equal(t, 1234, task.initialIndex)
 	assert.Equal(t, 5, task.secondChar)
 	assert.Equal(t, 10, task.thirdChar)
+	assert.Equal(t, 5678, task.untilIndex)
+	assert.Equal(t, 15, task.untilSecond)
+	assert.Equal(t, 20, task.untilThird)
+	assert.True(t, task.hasUntil)
 }
 
 func TestProcessFirstCharLogic(t *testing.T) {
