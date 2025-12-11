@@ -66,7 +66,11 @@ type plateTask struct {
 }
 
 func scrapPlates(fromPlate string, untilPlate string) {
-	initialIndex, firstChar, secondChar, thirdChar := internal.FromPlate(fromPlate)
+	var initialIndex, firstChar, secondChar, thirdChar int
+	if fromPlate != "" {
+		initialIndex, firstChar, secondChar, thirdChar = internal.FromPlate(fromPlate)
+	}
+	// else: all values default to 0, which means starting from 0000BBB
 
 	// Parse the until plate once to determine stopping conditions
 	hasUntil := untilPlate != ""
@@ -80,7 +84,7 @@ func scrapPlates(fromPlate string, untilPlate string) {
 
 	// Channel for distributing work to goroutines
 	tasks := make(chan plateTask, len(chars))
-	
+
 	// WaitGroup to wait for all workers to finish
 	var wg sync.WaitGroup
 
@@ -109,7 +113,7 @@ func scrapPlates(fromPlate string, untilPlate string) {
 			hasUntil:     hasUntil,
 		}
 		tasks <- task
-		
+
 		// Reset indices after the first character
 		initialIndex = 0
 		secondChar = 0
