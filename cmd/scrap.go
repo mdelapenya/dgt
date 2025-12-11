@@ -175,7 +175,7 @@ func processPlates(initialIndex int, c1 rune, c2 rune, thirdChar int, persist bo
 		processPlate(i, c1, c2, c3, persist)
 
 		// if the plate is the until plate, stop the process
-		if task.hasUntil && i == task.untilIndex && c2 == chars[task.untilSecond] && c3 == chars[task.untilThird] {
+		if task.hasUntil && i == task.untilIndex && c1 == task.firstChar && c2 == chars[task.untilSecond] && c3 == chars[task.untilThird] {
 			return false
 		}
 	}
