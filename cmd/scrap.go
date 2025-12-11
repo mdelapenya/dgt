@@ -136,25 +136,83 @@ func worker(tasks <-chan plateTask, wg *sync.WaitGroup, persist bool) {
 	}
 }
 
+// secondCharTask represents a task for processing plates with a specific second character
+type secondCharTask struct {
+	firstChar  rune
+	secondChar int
+	thirdChar  int
+	startIndex int
+	task       plateTask // parent task for until conditions
+}
+
 // processFirstChar processes all plates starting with a specific first character
+// using a pool of workers for second character parallelization
 func processFirstChar(task plateTask, persist bool) {
 	c1 := task.firstChar
 	initialIndex := task.initialIndex
 	secondChar := task.secondChar
 	thirdChar := task.thirdChar
 
-	for b := secondChar; b < len(chars); b++ {
-		c2 := chars[b]
-		for c := thirdChar; c < len(chars); c++ {
-			continueProcessing := processPlates(initialIndex, c1, c2, c, persist, task)
-			if !continueProcessing {
-				return
-			}
+	// Create inner worker pool for second character parallelization
+	numInnerWorkers := runtime.NumCPU()
 
-			initialIndex = 0
-			thirdChar = 0
+	innerTasks := make(chan secondCharTask, len(chars))
+	var innerWg sync.WaitGroup
+
+	// Start inner workers
+	for i := 0; i < numInnerWorkers; i++ {
+		innerWg.Add(1)
+		go innerWorker(c1, innerTasks, &innerWg, persist)
+	}
+
+	// Distribute tasks: one task per second character
+	for b := secondChar; b < len(chars); b++ {
+		// Check if we should stop based on until conditions
+		if task.hasUntil && c1 == chars[task.untilFirst] && b > task.untilSecond {
+			break
 		}
-		secondChar = 0
+
+		innerTask := secondCharTask{
+			firstChar:  c1,
+			secondChar: b,
+			thirdChar:  thirdChar,
+			startIndex: initialIndex,
+			task:       task,
+		}
+		innerTasks <- innerTask
+
+		// Reset for subsequent iterations
+		initialIndex = 0
+		thirdChar = 0
+	}
+
+	close(innerTasks)
+	innerWg.Wait()
+}
+
+// innerWorker processes secondCharTask items from the channel
+func innerWorker(c1 rune, tasks <-chan secondCharTask, wg *sync.WaitGroup, persist bool) {
+	defer wg.Done()
+
+	for task := range tasks {
+		processSecondChar(c1, task, persist)
+	}
+}
+
+// processSecondChar processes all plates with a specific first and second character
+func processSecondChar(c1 rune, sTask secondCharTask, persist bool) {
+	c2 := chars[sTask.secondChar]
+	thirdChar := sTask.thirdChar
+	initialIndex := sTask.startIndex
+	task := sTask.task
+
+	for c := thirdChar; c < len(chars); c++ {
+		continueProcessing := processPlates(initialIndex, c1, c2, c, persist, task)
+		if !continueProcessing {
+			return
+		}
+
+		initialIndex = 0
 	}
 }
 
