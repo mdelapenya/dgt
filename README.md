@@ -10,6 +10,8 @@ Es posible ejecutarlo en local en dos modos:
 
 La CLI ofrece el comando `scrap`, incluyendo la posibilidad de personalizar la respuesta con algunos flags:
 
+> **Nota:** El procesamiento de matrículas utiliza todos los núcleos de CPU disponibles en el sistema, procesando múltiples rangos de matrículas en paralelo para mejorar el rendimiento.
+
 ```shell
 Scraps all car plates retrieving their ECO sticker, starting in 0000BBB
 
