@@ -3,7 +3,9 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"runtime"
 	"strings"
+	"sync"
 
 	"github.com/mdelapenya/dgt/internal"
 	"github.com/mdelapenya/dgt/scrap"
@@ -50,25 +52,96 @@ func scrapPlate(plate string, persist bool) error {
 	return nil
 }
 
+// plateTask represents a task for processing all plates starting with a specific character
+type plateTask struct {
+	firstChar    rune
+	initialIndex int
+	secondChar   int
+	thirdChar    int
+}
+
 func scrapPlates(fromPlate string, untilPlate string) {
 	initialIndex, firstChar, secondChar, thirdChar := internal.FromPlate(fromPlate)
 
-	for a := firstChar; a < len(chars); a++ {
-		c1 := chars[a]
-		for b := secondChar; b < len(chars); b++ {
-			c2 := chars[b]
-			for c := thirdChar; c < len(chars); c++ {
-				continueProcessing := processPlates(initialIndex, c1, c2, c, persist, untilPlate)
-				if !continueProcessing {
-					return
-				}
+	// Parse the until plate to determine stopping conditions
+	var uFirstChar int
+	hasUntil := untilPlate != ""
+	if hasUntil {
+		_, uFirstChar, _, _ = internal.FromPlate(untilPlate)
+	}
 
-				initialIndex = 0
-				thirdChar = 0
-			}
-			secondChar = 0
+	// Create a pool of workers based on the number of CPUs
+	numWorkers := runtime.NumCPU()
+	runtime.GOMAXPROCS(numWorkers)
+
+	// Channel for distributing work to goroutines
+	tasks := make(chan plateTask, len(chars))
+	
+	// WaitGroup to wait for all workers to finish
+	var wg sync.WaitGroup
+
+	// Start worker goroutines
+	for i := 0; i < numWorkers; i++ {
+		wg.Add(1)
+		go worker(tasks, &wg, persist, untilPlate)
+	}
+
+	// Distribute tasks: one task per first character
+	for a := firstChar; a < len(chars); a++ {
+		// Skip characters beyond the until character
+		if hasUntil && a > uFirstChar {
+			break
 		}
-		firstChar = 0
+
+		task := plateTask{
+			firstChar:    chars[a],
+			initialIndex: initialIndex,
+			secondChar:   secondChar,
+			thirdChar:    thirdChar,
+		}
+		tasks <- task
+		
+		// Reset indices after the first character
+		initialIndex = 0
+		secondChar = 0
+		thirdChar = 0
+	}
+
+	// Close the tasks channel to signal workers that no more tasks will be sent
+	close(tasks)
+
+	// Wait for all workers to finish
+	wg.Wait()
+}
+
+// worker processes plateTask items from the tasks channel
+func worker(tasks <-chan plateTask, wg *sync.WaitGroup, persist bool, untilPlate string) {
+	defer wg.Done()
+
+	for task := range tasks {
+		processFirstChar(task, persist, untilPlate)
+	}
+}
+
+// processFirstChar processes all plates starting with a specific first character
+func processFirstChar(task plateTask, persist bool, untilPlate string) {
+	c1 := task.firstChar
+	initialIndex := task.initialIndex
+	secondChar := task.secondChar
+	thirdChar := task.thirdChar
+
+	for b := secondChar; b < len(chars); b++ {
+		c2 := chars[b]
+		for c := thirdChar; c < len(chars); c++ {
+			continueProcessing := processPlates(initialIndex, c1, c2, c, persist, untilPlate)
+			if !continueProcessing {
+				return
+			}
+
+			initialIndex = 0
+			thirdChar = 0
+		}
+		secondChar = 0
 	}
 }
 
