@@ -1,31 +1,9 @@
 version: '3'
 services:
-  go:
-    build: .
-    command: "${DGT_CMD:-}"
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 128M
-        reservations:
-          cpus: '0.25'
-          memory: 64M
-    depends_on:
-      db:
-        condition: service_healthy
-    ports:
-        - 8080:8080
-    environment:
-      - MYSQL_SERVER=db
-      - MYSQL_ROOT_PASSWORD=passw0rd
-
   go-b:
-    image: dgt-go:latest
+    image: mdelapenya/dgt:latest
     command: "scrap --persist --from 0000BBB --until 9999BZZ"
     depends_on:
-      go:
-        condition: service_started
       db:
         condition: service_healthy
     memswap_limit: 128M
@@ -42,11 +20,9 @@ services:
       - MYSQL_ROOT_PASSWORD=passw0rd
 
   go-c:
-    image: dgt-go:latest
+    image: mdelapenya/dgt:latest
     command: "scrap --persist --from 0000CBB --until 9999CZZ"
-    depends_on:
-      go:
-        condition: service_started 
+    depends_on: 
       db:
         condition: service_healthy
     memswap_limit: 128M
@@ -63,11 +39,9 @@ services:
       - MYSQL_ROOT_PASSWORD=passw0rd
 
   go-d:
-    image: dgt-go:latest
+    image: mdelapenya/dgt:latest
     command: "scrap --persist --from 0000DBB --until 9999DZZ"
     depends_on:
-      go:
-        condition: service_started
       db:
         condition: service_healthy
     memswap_limit: 128M
@@ -84,11 +58,9 @@ services:
       - MYSQL_ROOT_PASSWORD=passw0rd
 
   go-f:
-    image: dgt-go:latest
+    image: mdelapenya/dgt:latest
     command: "scrap --persist --from 0000FBB --until 9999FZZ"
     depends_on:
-      go:
-        condition: service_started
       db:
         condition: service_healthy
     memswap_limit: 128M
@@ -105,11 +77,9 @@ services:
       - MYSQL_ROOT_PASSWORD=passw0rd
 
   go-g:
-    image: dgt-go:latest
+    image: mdelapenya/dgt:latest
     command: "scrap --persist --from 0000GBB --until 9999GZZ"
     depends_on:
-      go:
-        condition: service_started
       db:
         condition: service_healthy
     memswap_limit: 128M
@@ -126,11 +96,9 @@ services:
       - MYSQL_ROOT_PASSWORD=passw0rd
 
   go-h:
-    image: dgt-go:latest
+    image: mdelapenya/dgt:latest
     command: "scrap --persist --from 0000HBB --until 9999HZZ"
     depends_on:
-      go:
-        condition: service_started
       db:
         condition: service_healthy
     memswap_limit: 128M
@@ -147,11 +115,9 @@ services:
       - MYSQL_ROOT_PASSWORD=passw0rd
 
   go-j:
-    image: dgt-go:latest
+    image: mdelapenya/dgt:latest
     command: "scrap --persist --from 0000JBB --until 9999JZZ"
     depends_on:
-      go:
-        condition: service_started
       db:
         condition: service_healthy
     memswap_limit: 128M
@@ -168,11 +134,9 @@ services:
       - MYSQL_ROOT_PASSWORD=passw0rd
 
   go-k:
-    image: dgt-go:latest
+    image: mdelapenya/dgt:latest
     command: "scrap --persist --from 0000KBB --until 9999KZZ"
     depends_on:
-      go:
-        condition: service_started
       db:
         condition: service_healthy
     memswap_limit: 128M
@@ -189,11 +153,9 @@ services:
       - MYSQL_ROOT_PASSWORD=passw0rd
 
   go-l:
-    image: dgt-go:latest
+    image: mdelapenya/dgt:latest
     command: "scrap --persist --from 0000LBB --until 9999LZZ"
     depends_on:
-      go:
-        condition: service_started
       db:
         condition: service_healthy
     memswap_limit: 128M
@@ -210,11 +172,28 @@ services:
       - MYSQL_ROOT_PASSWORD=passw0rd
 
   go-m:
-    image: dgt-go:latest
+    image: mdelapenya/dgt:latest
     command: "scrap --persist --from 0000MBB --until 9999MCZ"
     depends_on:
-      go:
-        condition: service_started
+      db:
+        condition: service_healthy
+    memswap_limit: 128M
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 128M
+        reservations:
+          cpus: '0.25'
+          memory: 64M
+    environment:
+      - MYSQL_SERVER=db
+      - MYSQL_ROOT_PASSWORD=passw0rd
+
+  go-n:
+    image: mdelapenya/dgt:latest
+    command: "scrap --persist --from 0000NBB --until 9999NZZ"
+    depends_on:
       db:
         condition: service_healthy
     memswap_limit: 128M
@@ -232,6 +211,7 @@ services:
 
   db:
     build: ./database
+    platform: linux/amd64
     environment:
       - MYSQL_DATABASE=dgt
       - MYSQL_ROOT_PASSWORD=passw0rd
