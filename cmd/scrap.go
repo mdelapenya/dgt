@@ -172,7 +172,7 @@ func processPlate(number int, c1 rune, c2 rune, c3 rune, persist bool) {
 // It will return true if the outer process should continue, or false if it should stop
 func processPlates(initialIndex int, c1 rune, c2 rune, thirdChar int, persist bool, task plateTask) bool {
 	c3 := chars[thirdChar]
-	
+
 	for i := initialIndex; i < 10000; i++ {
 		processPlate(i, c1, c2, c3, persist)
 
