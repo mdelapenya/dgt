@@ -59,6 +59,7 @@ type plateTask struct {
 	secondChar   int
 	thirdChar    int
 	untilIndex   int
+	untilFirst   int
 	untilSecond  int
 	untilThird   int
 	hasUntil     bool
@@ -102,6 +103,7 @@ func scrapPlates(fromPlate string, untilPlate string) {
 			secondChar:   secondChar,
 			thirdChar:    thirdChar,
 			untilIndex:   uInitialIndex,
+			untilFirst:   uFirstChar,
 			untilSecond:  uSecondChar,
 			untilThird:   uThirdChar,
 			hasUntil:     hasUntil,
@@ -175,7 +177,7 @@ func processPlates(initialIndex int, c1 rune, c2 rune, thirdChar int, persist bo
 		processPlate(i, c1, c2, c3, persist)
 
 		// if the plate is the until plate, stop the process
-		if task.hasUntil && i == task.untilIndex && c1 == task.firstChar && c2 == chars[task.untilSecond] && c3 == chars[task.untilThird] {
+		if task.hasUntil && i == task.untilIndex && c1 == chars[task.untilFirst] && c2 == chars[task.untilSecond] && c3 == chars[task.untilThird] {
 			return false
 		}
 	}

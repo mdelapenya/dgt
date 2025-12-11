@@ -15,6 +15,7 @@ func TestPlateTaskCreation(t *testing.T) {
 		secondChar:   5,
 		thirdChar:    10,
 		untilIndex:   5678,
+		untilFirst:   12,
 		untilSecond:  15,
 		untilThird:   20,
 		hasUntil:     true,
@@ -25,6 +26,7 @@ func TestPlateTaskCreation(t *testing.T) {
 	assert.Equal(t, 5, task.secondChar)
 	assert.Equal(t, 10, task.thirdChar)
 	assert.Equal(t, 5678, task.untilIndex)
+	assert.Equal(t, 12, task.untilFirst)
 	assert.Equal(t, 15, task.untilSecond)
 	assert.Equal(t, 20, task.untilThird)
 	assert.True(t, task.hasUntil)
