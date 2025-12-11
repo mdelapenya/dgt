@@ -26,10 +26,10 @@ const (
 const NotFound = "No se ha encontrado ningún resultado para la matrícula introducida"
 
 const noSticker = "Sin distintivo"
-const stickerB = "Etiqueta Ambiental B Amarilla"
-const stickerC = "Etiqueta Ambiental C Verde"
-const stickerEco = "Etiqueta Ambiental Eco"
-const stickerZero = "Etiqueta Ambiental 0"
+const stickerB = "Distintivo Ambiental B."
+const stickerC = "Distintivo Ambiental C."
+const stickerEco = "Distintivo Ambiental ECO."
+const stickerZero = "Distintivo Ambiental 0."
 const userAgent = "DGT Plates Bot https://github.com/mdelapenya/dgt - " +
 	"This bot just gathers info about plates, grouping them by sticker type"
 
@@ -43,7 +43,7 @@ var groupB = []string{}
 
 // ProcessPlate fetches plate information from DGT web site, using scrapping techniques
 func ProcessPlate(plate string, persist bool) (string, error) {
-	url := fmt.Sprintf("https://sede.dgt.gob.es/es/vehiculos/distintivo-ambiental/?accion=1&matriculahd=&matricula=%s&submit=Consultar", plate)
+	url := fmt.Sprintf("https://sede.dgt.gob.es/es/vehiculos/informacion-de-vehiculos/distintivo-ambiental/index.html?matricula=%s", plate)
 
 	// Create and modify HTTP request before sending
 	req, err := http.NewRequest("GET", url, nil)

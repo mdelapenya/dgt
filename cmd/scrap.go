@@ -3,7 +3,9 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"runtime"
 	"strings"
+	"sync"
 
 	"github.com/mdelapenya/dgt/internal"
 	"github.com/mdelapenya/dgt/scrap"
@@ -50,25 +52,167 @@ func scrapPlate(plate string, persist bool) error {
 	return nil
 }
 
+// plateTask represents a task for processing all plates starting with a specific character
+type plateTask struct {
+	firstChar    rune
+	initialIndex int
+	secondChar   int
+	thirdChar    int
+	untilIndex   int
+	untilFirst   int
+	untilSecond  int
+	untilThird   int
+	hasUntil     bool
+}
+
 func scrapPlates(fromPlate string, untilPlate string) {
-	initialIndex, firstChar, secondChar, thirdChar := internal.FromPlate(fromPlate)
+	var initialIndex, firstChar, secondChar, thirdChar int
+	if fromPlate != "" {
+		initialIndex, firstChar, secondChar, thirdChar = internal.FromPlate(fromPlate)
+	}
+	// else: all values default to 0, which means starting from 0000BBB
 
+	// Parse the until plate once to determine stopping conditions
+	hasUntil := untilPlate != ""
+	var uInitialIndex, uFirstChar, uSecondChar, uThirdChar int
+	if hasUntil {
+		uInitialIndex, uFirstChar, uSecondChar, uThirdChar = internal.FromPlate(untilPlate)
+	}
+
+	// Create a pool of workers based on the number of CPUs
+	numWorkers := runtime.NumCPU()
+
+	// Channel for distributing work to goroutines
+	tasks := make(chan plateTask, len(chars))
+
+	// WaitGroup to wait for all workers to finish
+	var wg sync.WaitGroup
+
+	// Start worker goroutines
+	for i := 0; i < numWorkers; i++ {
+		wg.Add(1)
+		go worker(tasks, &wg, persist)
+	}
+
+	// Distribute tasks: one task per first character
 	for a := firstChar; a < len(chars); a++ {
-		c1 := chars[a]
-		for b := secondChar; b < len(chars); b++ {
-			c2 := chars[b]
-			for c := thirdChar; c < len(chars); c++ {
-				continueProcessing := processPlates(initialIndex, c1, c2, c, persist, untilPlate)
-				if !continueProcessing {
-					return
-				}
-
-				initialIndex = 0
-				thirdChar = 0
-			}
-			secondChar = 0
+		// Skip characters beyond the until character if until is specified
+		if hasUntil && a > uFirstChar {
+			break
 		}
-		firstChar = 0
+
+		task := plateTask{
+			firstChar:    chars[a],
+			initialIndex: initialIndex,
+			secondChar:   secondChar,
+			thirdChar:    thirdChar,
+			untilIndex:   uInitialIndex,
+			untilFirst:   uFirstChar,
+			untilSecond:  uSecondChar,
+			untilThird:   uThirdChar,
+			hasUntil:     hasUntil,
+		}
+		tasks <- task
+
+		// Reset indices after the first character
+		initialIndex = 0
+		secondChar = 0
+		thirdChar = 0
+	}
+
+	// Close the tasks channel to signal workers that no more tasks will be sent
+	close(tasks)
+
+	// Wait for all workers to finish
+	wg.Wait()
+}
+
+// worker processes plateTask items from the tasks channel
+func worker(tasks <-chan plateTask, wg *sync.WaitGroup, persist bool) {
+	defer wg.Done()
+
+	for task := range tasks {
+		processFirstChar(task, persist)
+	}
+}
+
+// secondCharTask represents a task for processing plates with a specific second character
+type secondCharTask struct {
+	firstChar  rune
+	secondChar int
+	thirdChar  int
+	startIndex int
+	task       plateTask // parent task for until conditions
+}
+
+// processFirstChar processes all plates starting with a specific first character
+// using a pool of workers for second character parallelization
+func processFirstChar(task plateTask, persist bool) {
+	c1 := task.firstChar
+	initialIndex := task.initialIndex
+	secondChar := task.secondChar
+	thirdChar := task.thirdChar
+
+	// Create inner worker pool for second character parallelization
+	numInnerWorkers := runtime.NumCPU()
+
+	innerTasks := make(chan secondCharTask, len(chars))
+	var innerWg sync.WaitGroup
+
+	// Start inner workers
+	for i := 0; i < numInnerWorkers; i++ {
+		innerWg.Add(1)
+		go innerWorker(c1, innerTasks, &innerWg, persist)
+	}
+
+	// Distribute tasks: one task per second character
+	for b := secondChar; b < len(chars); b++ {
+		// Check if we should stop based on until conditions
+		if task.hasUntil && c1 == chars[task.untilFirst] && b > task.untilSecond {
+			break
+		}
+
+		innerTask := secondCharTask{
+			firstChar:  c1,
+			secondChar: b,
+			thirdChar:  thirdChar,
+			startIndex: initialIndex,
+			task:       task,
+		}
+		innerTasks <- innerTask
+
+		// Reset for subsequent iterations
+		initialIndex = 0
+		thirdChar = 0
+	}
+
+	close(innerTasks)
+	innerWg.Wait()
+}
+
+// innerWorker processes secondCharTask items from the channel
+func innerWorker(c1 rune, tasks <-chan secondCharTask, wg *sync.WaitGroup, persist bool) {
+	defer wg.Done()
+
+	for task := range tasks {
+		processSecondChar(c1, task, persist)
+	}
+}
+
+// processSecondChar processes all plates with a specific first and second character
+func processSecondChar(c1 rune, sTask secondCharTask, persist bool) {
+	c2 := chars[sTask.secondChar]
+	thirdChar := sTask.thirdChar
+	initialIndex := sTask.startIndex
+	task := sTask.task
+
+	for c := thirdChar; c < len(chars); c++ {
+		continueProcessing := processPlates(initialIndex, c1, c2, c, persist, task)
+		if !continueProcessing {
+			return
+		}
+
+		initialIndex = 0
 	}
 }
 
@@ -88,14 +232,14 @@ func processPlate(number int, c1 rune, c2 rune, c3 rune, persist bool) {
 
 // processPlates processes all the plates from the given initial index, until the given until plate
 // It will return true if the outer process should continue, or false if it should stop
-func processPlates(initialIndex int, c1 rune, c2 rune, thirdChar int, persist bool, untilPlate string) bool {
+func processPlates(initialIndex int, c1 rune, c2 rune, thirdChar int, persist bool, task plateTask) bool {
 	c3 := chars[thirdChar]
+
 	for i := initialIndex; i < 10000; i++ {
 		processPlate(i, c1, c2, c3, persist)
 
 		// if the plate is the until plate, stop the process
-		uInitialIndex, uFirstChar, uSecondChar, uThirdChar := internal.FromPlate(untilPlate)
-		if i == uInitialIndex && c1 == chars[uFirstChar] && c2 == chars[uSecondChar] && c3 == chars[uThirdChar] {
+		if task.hasUntil && i == task.untilIndex && c1 == chars[task.untilFirst] && c2 == chars[task.untilSecond] && c3 == chars[task.untilThird] {
 			return false
 		}
 	}
