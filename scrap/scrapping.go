@@ -43,6 +43,7 @@ var groupB = []string{}
 
 // ProcessPlate fetches plate information from DGT web site, using scrapping techniques
 func ProcessPlate(plate string, persist bool) (string, error) {
+	plate = strings.ToUpper(plate)
 	url := fmt.Sprintf("https://sede.dgt.gob.es/es/vehiculos/informacion-de-vehiculos/distintivo-ambiental/index.html?matricula=%s", plate)
 
 	// Create and modify HTTP request before sending
